@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center my-4">Upload Your Art</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label for="title">Title:</label>
+        {{ form.title }}
+    
+        <label for="description">Description:</label>
+        {{ form.description }}
+    
+        <label for="price">Price:</label>
+        {{ form.price }}
+    
+        <label for="image">Upload Image:</label>
+        {{ form.image }}
+    
+        <button type="submit">Create Post</button>
+    </form>
+    
+</div>
+{% endblock %}

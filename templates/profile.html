@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <img class="profile-pic" src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+        <div class="profile-info">
+            <h2>@{{ profile_user.username }}</h2>
+            <p>{{ profile_user.bio }}</p>
+
+            <p>Followers: <span id="followers-count">{{ profile.followers.count|default:0 }}</span></p>
+            <p>Following: <span id="following-count">{{ profile.following.count|default:0 }}</span></p>
+            
+         {% if user.is_authenticated and user != profile_user %}
+           <form action="{% url 'follow_unfollow' profile_user.username %}" method="POST" class="follow-form">
+             {% csrf_token %}
+             {% if user in profile.followers.all %}
+            <button type="submit" class="follow-btn" style="background-color: red; color: white;">Unfollow</button>
+             {% else %}
+            <button type="submit" class="follow-btn">Follow</button>
+             {% endif %}
+             </form>
+         {% endif %}
+
+            
+            {% if user == profile_user.user %}
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- User Posts -->
+    <div class="posts-grid">
+        {% for post in posts %}
+            <div class="post-item">
+                <img src="{{ post.image.url }}" alt="Post">
+            </div>
+        {% empty %}
+            <p>No posts yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

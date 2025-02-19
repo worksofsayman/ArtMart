@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid px-2">
+
+    <!-- Feed Section -->
+    <h2 class="text-center my-4">📸 Your Feed</h2>
+    <div class="row" id="feed-container">
+        {% for post in posts %}
+            <div class="col-md-4 d-flex">
+                <div class="card mb-4 d-flex flex-column h-100" id="post-{{ post.id }}">
+                    
+                    <!-- Clickable Post Image -->
+                    <a href="{% url 'post_detail_view' post.id %}">
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+                    </a>
+
+                    <div class="card-body d-flex flex-column flex-grow-1">
+                        
+                        <!-- Post Header with Username & Follow Button -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <a href="{% url 'profile' post.user.username %}" class="text-primary fw-bold">@{{ post.user.username }}</a>
+
+                            {% if user.is_authenticated and user != post.user %}
+                            <form action="{% url 'follow_unfollow' post.user.username %}" method="POST" class="follow-form">
+                                {% csrf_token %}
+                                {% if user in post.user.profile.followers.all %}
+                                    <button type="submit" class="follow-btn" style="background-color: red; color: white;">Unfollow</button>
+                                {% else %}
+                                    <button type="submit" class="follow-btn">Follow</button>
+                                {% endif %}
+                            </form>
+                            {% endif %}
+                        </div>
+
+                        <!-- Clickable Post Title -->
+                        <h5 class="card-title">
+                            <a href="{% url 'post_detail_view' post.id %}" class="text-decoration-none text-dark">
+                                {{ post.title }}
+                            </a>
+                        </h5>
+                        
+                        <p class="text-muted">Category: {{ post.category }}</p>
+                        <p class="text-muted">Price: ₹{{ post.price }}</p>
+                        <p class="card-text">caption: {{ post.caption }}</p>
+                        <p class="text-muted">uploded_on: {{ post.created_at|date:"F d, Y" }}</p>
+
+                        <!-- Availability Badge -->
+                        {% if post.availability %}
+                            <span class="badge bg-success">Available</span>
+                        {% else %}
+                            <span class="badge bg-danger">Sold</span>
+                        {% endif %}
+
+                        <!-- Like & Dislike Buttons -->
+                        <button class="like-btn" data-post-id="{{ post.id }}">👍 Like (<span id="like-count-{{ post.id }}">{{ post.like_count }}</span>)</button>
+                        <button class="dislike-btn" data-post-id="{{ post.id }}">👎 Dislike (<span id="dislike-count-{{ post.id }}">{{ post.dislike_count}}</span>)</button>
+
+                        <!-- Comment Button -->
+                        <button class="toggle-comments" data-post-id="{{ post.id }}">💬 View Comments (<span id="comment-count-{{ post.id }}">{{ post.comments.count }}</span>)</button>
+
+                        <!-- Hidden Comment Section -->
+                        <div id="comment-section-{{ post.id }}" style="display: none;">
+                            <div id="comments-{{ post.id }}">
+                                {% for comment in post.comments.all %}
+                                    <p><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Comment Form -->
+                            <form class="comment-form" data-post-id="{{ post.id }}">
+                                {% csrf_token %}
+                                <input type="text" name="text" id="comment-input-{{ post.id }}" placeholder="Write a comment..." required>
+                                <button type="submit">Post</button>
+                            </form>
+                            
+                        </div>
+
+                        <!-- View Details Button -->
+                        <a href="{% url 'post_detail_view' post.id %}" class="btn btn-primary mt-2">View Details</a>
+
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No posts yet. Start sharing your moments!</p>
+        {% endfor %}
+    </div>
+</div>
+
+    
+<!-- JavaScript for AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        console.log("✅ jQuery Loaded!");
+    
+        // ✅ Function to Get CSRF Token from Meta Tag
+        function getCSRFToken() {
+            return $("meta[name='csrf-token']").attr("content");
+        }
+    
+        // ✅ Like & Dislike Functionality
+        $(document).on("click", ".like-btn, .dislike-btn", function () {
+            let button = $(this);
+            let postID = button.data("post-id");
+            let action = button.hasClass("like-btn") ? "like" : "dislike";
+            let csrfToken = getCSRFToken();  // Fetch CSRF Token
+    
+            console.log(`🚀 ${action.toUpperCase()} clicked for post:`, postID);
+    
+            $.ajax({
+                type: "POST",
+                url: `/users/${action}/${postID}/`,
+                headers: { "X-CSRFToken": csrfToken },
+                success: function (response) {
+                    console.log("✅ Response received:", response);
+    
+                    if (response.success) {
+                        // Update Like/Dislike Counts Dynamically
+                        $(`#like-count-${postID}`).text(response.likes);
+                        $(`#dislike-count-${postID}`).text(response.dislikes);
+                    } else {
+                        alert("❌ Error: " + (response.error || "Something went wrong."));
+                    }
+                },
+                error: function (xhr) {
+                    console.log("❌ AJAX Error:", xhr.responseText);
+                    alert("❌ Failed to update reaction.");
+                }
+            });
+        });
+    
+        // ✅ Toggle Comments Section (Event Delegation)
+        $(document).on("click", ".toggle-comments", function () {
+            let postID = $(this).data("post-id");
+            console.log("Toggling comments for post:", postID);
+            $(`#comment-section-${postID}`).slideToggle();
+        });
+    
+        // ✅ AJAX Comment Submission
+        $(document).on("submit", ".comment-form", function (e) {
+            e.preventDefault();
+        
+            let form = $(this);
+            let postID = form.data("post-id");
+            let commentText = form.find("input[name='text']").val().trim();
+            let csrfToken = $("input[name=csrfmiddlewaretoken]").val(); // Get CSRF token
+        
+            if (commentText === "") {
+                alert("⚠ Comment cannot be empty!");
+                return;
+            }
+        
+            $.ajax({
+                type: "POST",
+                url: `/users/add_comment/${postID}/`,
+                headers: { "X-CSRFToken": csrfToken },
+                contentType: "application/json",
+                data: JSON.stringify({ text: commentText }),
+                success: function (response) {
+                    console.log("✅ Response:", response);
+                    if (response.success) {
+                        $(`#comments-${postID}`).append(
+                            `<p><strong>${response.username}</strong>: ${response.text}</p>`
+                        );
+                        form.find("input[name='text']").val(""); // Clear input
+                    } else {
+                        alert("❌ " + response.error);
+                    }
+                },
+                error: function (xhr) {
+                    console.log("❌ AJAX Error:", xhr.responseText);
+                    alert("❌ Failed to post comment.");
+                }
+            });
+        });
+          
+    
+    });
+
+   
+ </script>
+    
+
+{% endblock %}
