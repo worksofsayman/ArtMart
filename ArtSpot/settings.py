@@ -13,11 +13,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATIC_URL = '/static/'
+
+# Ensure BASE_DIR is properly defined
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# This tells Django where to look for additional static files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Required for production (run `collectstatic` before deploying)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 CSRF_FAILURE_VIEW = 'home.views.custom_csrf_failure_view'
 
-STATIC_ROOT = "/home/krushn/ArtSpot/static"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,7 +42,7 @@ SECRET_KEY = 'django-insecure-zn@^g9!l0mat885@uc14(#+5ld@5ixlvju1s((yp1sb#d_fh0z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,6 +57,7 @@ INSTALLED_APPS = [
     'home',
 ]
 
+# Ensure the MIDDLEWARE list is already defined before inserting WhiteNoise
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -52,6 +67,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Now insert WhiteNoise (ensuring this comes after defining MIDDLEWARE)
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # This should be below the MIDDLEWARE definition
+
 
 ROOT_URLCONF = 'ArtSpot.urls'
 
@@ -80,9 +99,9 @@ WSGI_APPLICATION = 'ArtSpot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ArtSpot',
-        'USER': 'Sayman',
-        'PASSWORD': 'Sayman@2007',
+        'NAME': 'artspotdb',
+        'USER': 'root',
+        'PASSWORD': 'Praveen027',
         'HOST': 'localhost',
         'PORT': '3306', 
     }
@@ -120,27 +139,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = '/static/'
-#Added manually
-STATICFILES_DIRS= [
-    os.path.join(BASE_DIR,"static")
-]
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-import os
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # Ensure this is set!
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),  # Optional if you store static files in "static"
-]

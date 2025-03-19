@@ -1,25 +1,82 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <h2 class="text-center my-4">Upload Your Art</h2>
-    
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <label for="title">Title:</label>
-        {{ form.title }}
-    
-        <label for="description">Description:</label>
-        {{ form.description }}
-    
-        <label for="price">Price:</label>
-        {{ form.price }}
-    
-        <label for="image">Upload Image:</label>
-        {{ form.image }}
-    
-        <button type="submit">Create Post</button>
-    </form>
-    
+<div class="flex justify-center items-center min-h-screen bg-gray-900 px-4 pt-3 pb-20">
+    <div class="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 class="text-center text-2xl font-semibold mb-6">Upload Your Art</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
+
+            <!-- Title Field -->
+            <div>
+                <label for="title" class="block font-medium mb-1">Title:</label>
+                <input type="text" name="title" id="title"
+                    class="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter a title">
+            </div>
+
+            <!-- Image Preview -->
+            <div id="image-preview-container" class="hidden mt-4">
+                <p class="text-gray-400 text-sm">Image Preview:</p>
+                <div class="relative w-full border border-gray-600 rounded-md overflow-hidden">
+                    <img id="image-preview" class="w-full h-auto">
+                </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div>
+                <label for="image" class="block font-medium mb-1">Upload Image:</label>
+                <input type="file" name="image" id="image-input" accept="image/*"
+                    class="w-full p-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+            </div>
+
+
+            <!-- Description Field -->
+            <div>
+                <label for="description" class="block font-medium mb-1">Description:</label>
+                <textarea name="description" id="description" rows="4"
+                    class="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+                    placeholder="Enter description..."></textarea>
+            </div>
+
+            <!-- Price Field -->
+            <div>
+                <label for="price" class="block font-medium mb-1">Price:</label>
+                <input type="number" name="price" id="price"
+                    class="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter price">
+            </div>
+
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition">
+                Create Post
+            </button>
+        </form>
+    </div>
 </div>
+
+<!-- JavaScript for Image Preview with Exact Dimensions -->
+<script>
+    document.getElementById("image-input").addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function () {
+                    const preview = document.getElementById("image-preview");
+                    preview.src = img.src;
+                    preview.style.width = img.width + "px";
+                    preview.style.height = img.height + "px";
+
+                    document.getElementById("image-preview-container").classList.remove("hidden");
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 {% endblock %}

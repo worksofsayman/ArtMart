@@ -2,19 +2,113 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Art Club</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>The Art Club - Register</title>
 </head>
 
-<body>
-<h2>Register</h2>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+<body class="flex justify-center items-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+
+  <!-- Glassmorphic Registration Card -->
+  <div class="bg-white bg-opacity-10 backdrop-blur-lg border border-gray-700 shadow-xl rounded-xl px-10 py-8 text-center w-[50%]">
+
+    <!-- Logo (Optional) -->
+    <div class="mb-5">
+      <h1 class="text-4xl font-extrabold text-white drop-shadow-md">🎨 The Art Club</h1>
+    </div>
+
+    <!-- Register Heading -->
+    <h2 class="text-3xl font-semibold text-white drop-shadow-lg mb-6">Create Account</h2>
+
+    <!-- Registration Form -->
+    <form method="POST" class="space-y-5">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        {% for field in form %}
+        <div class="text-left relative">
+          <label class="block text-gray-300 font-medium mb-1">{{ field.label }}</label>
+
+          <!-- Password Fields with Show/Hide Toggle -->
+          {% if "password" in field.name %}
+          <div class="relative">
+            {{ field }}
+            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 togglePassword">
+              <svg class="eyeOpen w-6 h-6 text-gray-400 cursor-pointer transition hover:text-gray-200" fill="none"
+                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 4-4.5 7-9 7s-9-3-9-7 4.5-7 9-7 9 3 9 7z" />
+              </svg>
+              <svg class="eyeSlash w-6 h-6 text-gray-400 cursor-pointer transition hover:text-gray-200 hidden"
+                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 3l18 18M10 10c.8-.8 2.2-.8 3 0m4 4c-1.5 1.5-3.8 2.3-6 2.3-2.2 0-4.5-.8-6-2.3m10-10c1.5 1.5 2.3 3.8 2.3 6s-.8 4.5-2.3 6" />
+              </svg>
+            </button>
+          </div>
+          {% else %}
+          {{ field }}
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Styled Submit Button -->
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-transform transform hover:scale-105 shadow-lg">
+        Sign Up
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <p class="text-gray-300 mt-4 text-sm">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-blue-400 hover:text-blue-300 transition">Login here</a>
+    </p>
+
+    <!-- Divider Line -->
+    <div class="border-t border-gray-500 border-opacity-20 mt-6"></div>
+
+  </div>
+
+  <!-- Tailwind Styles for Input Fields -->
+  <style>
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background-color: #1f2937;
+      color: white;
+      border: 1px solid #4b5563;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      outline: none;
+      transition: all 0.2s ease-in-out;
+    }
+  </style>
+
+  <!-- JavaScript for Show/Hide Password -->
+  <script>
+    document.querySelectorAll(".togglePassword").forEach(button => {
+      button.addEventListener("click", function () {
+        const inputField = this.previousElementSibling;
+        const eyeOpen = this.querySelector(".eyeOpen");
+        const eyeSlash = this.querySelector(".eyeSlash");
+
+        if (inputField.type === "password") {
+          inputField.type = "text";
+          eyeOpen.classList.add("hidden");
+          eyeSlash.classList.remove("hidden");
+        } else {
+          inputField.type = "password";
+          eyeOpen.classList.remove("hidden");
+          eyeSlash.classList.add("hidden");
+        }
+      });
+    });
+  </script>
+
 </body>
 
 </html>
