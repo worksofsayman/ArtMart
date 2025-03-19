@@ -4,204 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
-
     <title>Social Platform</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
- 
-<link rel="stylesheet" type="text/css" href="{% static 'users/styles.css' %}">
-<!-- Font Awesome for premium icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            text-align: center;
-        }
-        nav {
-            background: #333;
-            color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .logout-btn {
-            background: red;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    
-    <div class="container">
+<body class="font-sans">
+      
+    <div class="">
         {% block content %}
         {% endblock %}
-
-
-
     </div>
-
-    <div class="bottom-navbar">
-        <a href="{% url 'feed' %}" class="nav-item"><i class="fa-solid fa-house"></i></a>
-        <a href="{% url 'create_post' %}" class="nav-item"><i class="fa-solid fa-plus"></i></a>
-        <a href="{% url 'profile' request.user.username %}" class="nav-item"><i class="fa-solid fa-user"></i></a>
+    
+    <div class="fixed bottom-0 left-0 w-full bg-gray-800 text-white flex justify-around py-3">
+        <a href="{% url 'feed' %}" class="text-2xl"><i class="fa-solid fa-house"></i></a>
+        <a href="{% url 'create_post' %}" class="text-2xl"><i class="fa-solid fa-plus"></i></a>
+        <a href="{% url 'profile' request.user.username %}" class="text-2xl"><i class="fa-solid fa-user"></i></a>
     </div>
     
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".follow-form").forEach(form => {
-                form.addEventListener("submit", function (event) {
-                    event.preventDefault(); 
-        
-                    let button = this.querySelector(".follow-btn");
-                    let url = this.action;
-                    let csrfToken = this.querySelector("[name=csrfmiddlewaretoken]").value;
-                    let followerCount = document.getElementById("followers-count");
-                    let followingCount = document.getElementById("following-count");
-        
-                    fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "X-CSRFToken": csrfToken,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({})
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.following) {
-                            button.textContent = "Unfollow";
-                            button.style.backgroundColor = "red";
-                        } else {
-                            button.textContent = "Follow";
-                            button.style.backgroundColor = "";
-                        }
-        
-                        // Update follower & following counts
-                        if (followerCount) {
-                            followerCount.textContent = data.followers_count;
-                        }
-                        if (followingCount) {
-                            followingCount.textContent = data.following_count;
-                        }
-                    })
-                    .catch(error => console.error("Error:", error));
-                });
-            });
+        $(document).ready(function () {
+            console.log("✅ jQuery Loaded!");
         });
-        </script>
-        
-        <!-- JavaScript for AJAX -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        console.log("✅ jQuery Loaded!");
-    
-        // ✅ Function to Get CSRF Token from Meta Tag
-        function getCSRFToken() {
-            return $("meta[name='csrf-token']").attr("content");
-        }
-    
-        // ✅ Like & Dislike Functionality
-        $(document).on("click", ".like-btn, .dislike-btn", function () {
-            let button = $(this);
-            let postID = button.data("post-id");
-            let action = button.hasClass("like-btn") ? "like" : "dislike";
-            let csrfToken = getCSRFToken();  // Fetch CSRF Token
-    
-            console.log(`🚀 ${action.toUpperCase()} clicked for post:`, postID);
-    
-            $.ajax({
-                type: "POST",
-                url: `/users/${action}/${postID}/`,
-                headers: { "X-CSRFToken": csrfToken },
-                success: function (response) {
-                    console.log("✅ Response received:", response);
-    
-                    if (response.success) {
-                        // Update Like/Dislike Counts Dynamically
-                        $(`#like-count-${postID}`).text(response.likes);
-                        $(`#dislike-count-${postID}`).text(response.dislikes);
-                    } else {
-                        alert("❌ Error: " + (response.error || "Something went wrong."));
-                    }
-                },
-                error: function (xhr) {
-                    console.log("❌ AJAX Error:", xhr.responseText);
-                    alert("❌ Failed to update reaction.");
-                }
-            });
-        });
-    
-        // ✅ Toggle Comments Section (Event Delegation)
-        $(document).on("click", ".toggle-comments", function () {
-            let postID = $(this).data("post-id");
-            console.log("Toggling comments for post:", postID);
-            $(`#comment-section-${postID}`).slideToggle();
-        });
-    
-        // ✅ AJAX Comment Submission
-        $(document).on("submit", ".comment-form", function (e) {
-            e.preventDefault();
-        
-            let form = $(this);
-            let postID = form.data("post-id");
-            let commentText = form.find("input[name='text']").val().trim();
-            let csrfToken = $("input[name=csrfmiddlewaretoken]").val(); // Get CSRF token
-        
-            if (commentText === "") {
-                alert("⚠ Comment cannot be empty!");
-                return;
-            }
-        
-            $.ajax({
-                type: "POST",
-                url: `/users/add_comment/${postID}/`,
-                headers: { "X-CSRFToken": csrfToken },
-                contentType: "application/json",
-                data: JSON.stringify({ text: commentText }),
-                success: function (response) {
-                    console.log("✅ Response:", response);
-                    if (response.success) {
-                        $(`#comments-${postID}`).append(
-                            `<p><strong>${response.username}</strong>: ${response.text}</p>`
-                        );
-                        form.find("input[name='text']").val(""); // Clear input
-                    } else {
-                        alert("❌ " + response.error);
-                    }
-                },
-                error: function (xhr) {
-                    console.log("❌ AJAX Error:", xhr.responseText);
-                    alert("❌ Failed to post comment.");
-                }
-            });
-        });
-          
-    
-    });
-
-   
- </script>
-    
-        
+    </script>
 </body>
 </html>
