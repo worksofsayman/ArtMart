@@ -3,9 +3,38 @@
 {% block content %}
 <div class="mx-auto px-4 bg-black pb-6 min-h-screen">
 
+    <style>
+        .tooltip-btn {
+            position: relative;
+        }
+
+        .tooltip-btn:hover .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tooltip-text {
+            position: absolute;
+            bottom: 135%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f2937;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+    </style>
+
     <!-- Feed Section -->
     <h2 class="text-center text-white text-4xl font-extrabold py-3 pb-8">📸 Your Feed</h2>
-    <div class="flex justify-center items-center w-[]">
+    <div class="flex justify-center items-center">
         <div class="w-[40rem] pb-10" id="feed-container">
             {% for post in posts %}
             <div class="bg-gray-900 border border-gray-800 rounded-xl shadow-lg p-4 relative flex flex-col my-5">
@@ -13,12 +42,11 @@
                 <!-- Clickable Post Image -->
                 <a href="{% url 'post_detail_view' post.id %}" class="rounded-lg overflow-hidden flex justify-center">
                     <img src="{{ post.image.url }}"
-                        class="max-w-[23rem] max-h-auto object-cover rounded-lg hover:scale-105 transition">
+                        class="max-w-[23rem] object-cover rounded-lg hover:scale-105 transition">
                 </a>
 
                 <div class="mt-4 flex flex-col flex-grow">
-
-                    <!-- Post Header with Username & Follow Button -->
+                    <!-- Post Header -->
                     <div class="flex justify-between items-center mb-2">
                         <a href="{% url 'profile' post.user.username %}" class="text-blue-400 font-semibold">
                             @{{ post.user.username }}
@@ -38,47 +66,45 @@
                         {% endif %}
                     </div>
 
-                    <!-- Clickable Post Title -->
+                    <!-- Post Info -->
                     <h3 class="text-xl font-bold text-white">
                         <a href="{% url 'post_detail_view' post.id %}" class="hover:text-blue-400">
                             {{ post.title }}
                         </a>
                     </h3>
-
                     <p class="text-gray-400 text-sm">Category: {{ post.category }}</p>
                     <p class="text-gray-400 text-sm">Price: ₹{{ post.price }}</p>
                     <p class="text-gray-300 mt-2">{{ post.caption }}</p>
                     <p class="text-gray-400 text-sm">Uploaded on: {{ post.created_at|date:"F d, Y" }}</p>
 
-                    <!-- Availability Badge -->
+                    <!-- Availability -->
                     {% if post.availability %}
                     <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs mt-2">Available</span>
                     {% else %}
                     <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs mt-2">Sold</span>
                     {% endif %}
 
-                    <!-- Like, Dislike, Comment Buttons -->
+                    <!-- Like/Dislike/Comment -->
                     <div class="mt-4 flex flex-col items-center gap-2">
-                        <!-- Like & Dislike Count on Top -->
-                        <div class="flex justify-center gap-4">
-                            <div>
-                                👍 <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span>
+                        <div class="flex gap-2 mt-1">
+                            <!-- Like Button with Tooltip -->
+                            <div class="tooltip-btn">
+                                <button class="like-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
+                                    data-post-id="{{ post.id }}">
+                                    👍 Like
+                                </button>
+                                <div class="tooltip-text">👍 Likes: {{ post.total_likes }}</div>
                             </div>
-                            <div>
-                                👎 <span id="dislike-count-{{ post.id }}">{{ post.total_dislikes }}</span>
-                            </div>
-                        </div>
 
-                        <!-- Like & Dislike Buttons -->
-                        <div class="flex gap-2">
-                            <button class="like-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
-                                data-post-id="{{ post.id }}">
-                                👍 Like
-                            </button>
-                            <button class="dislike-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
-                                data-post-id="{{ post.id }}">
-                                👎 Dislike
-                            </button>
+                            <!-- Dislike Button with Tooltip -->
+                            <div class="tooltip-btn">
+                                <button class="dislike-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
+                                    data-post-id="{{ post.id }}">
+                                    👎 Dislike
+                                </button>
+                                <div class="tooltip-text">👎 Dislike: {{ post.total_dislikes }}</div>
+                            </div>
+
                             <button
                                 class="toggle-comments bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
                                 data-post-id="{{ post.id }}">
@@ -87,8 +113,7 @@
                         </div>
                     </div>
 
-
-                    <!-- Hidden Comment Section -->
+                    <!-- Comments -->
                     <div id="comment-section-{{ post.id }}" class="hidden mt-4 bg-gray-800 p-3 rounded-lg">
                         <div id="comments-{{ post.id }}" class="text-gray-300">
                             {% for comment in post.comments.all %}
@@ -106,12 +131,11 @@
                         </form>
                     </div>
 
-                    <!-- View Details Button -->
+                    <!-- View Details -->
                     <a href="{% url 'post_detail_view' post.id %}"
                         class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg">
                         View Details
                     </a>
-
                 </div>
             </div>
             {% empty %}
@@ -120,18 +144,15 @@
         </div>
     </div>
 
-
-    <!-- JavaScript for AJAX -->
+    <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            console.log("✅ jQuery Loaded!");
-            // ✅ CSRF Token Fetching
             function getCSRFToken() {
-                return $("input[name=csrfmiddlewaretoken]").val();  // Get CSRF token from form
+                return $("input[name=csrfmiddlewaretoken]").val();
             }
 
-            // ✅ Like & Dislike Functionality
+            // Like/Dislike
             $(document).on("click", ".like-btn, .dislike-btn", function () {
                 let button = $(this);
                 let postID = button.data("post-id");
@@ -146,6 +167,10 @@
                         if (response.success) {
                             $(`#like-count-${postID}`).text(response.likes);
                             $(`#dislike-count-${postID}`).text(response.dislikes);
+
+                            // Update tooltip text
+                            $(`.like-btn[data-post-id="${postID}"]`).siblings('.tooltip-text').text(`Likes: ${response.likes}`);
+                            $(`.dislike-btn[data-post-id="${postID}"]`).siblings('.tooltip-text').text(`Dislikes: ${response.dislikes}`);
                         } else {
                             alert("❌ Error: " + response.error);
                         }
@@ -156,22 +181,21 @@
                 });
             });
 
-            // ✅ Toggle Comments Section
+            // Toggle Comments
             $(document).on("click", ".toggle-comments", function () {
                 let postID = $(this).data("post-id");
                 $(`#comment-section-${postID}`).slideToggle();
             });
 
-            // ✅ AJAX Comment Submission
+            // Add Comment
             $(document).on("submit", ".comment-form", function (e) {
                 e.preventDefault();
-
                 let form = $(this);
                 let postID = form.data("post-id");
                 let commentText = form.find("input[name='text']").val().trim();
-                let csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+                let csrfToken = getCSRFToken();
 
-                if (commentText === "") {
+                if (!commentText) {
                     alert("⚠ Comment cannot be empty!");
                     return;
                 }
@@ -195,9 +219,7 @@
                     }
                 });
             });
-
         });
-
     </script>
-
-    {% endblock %}
+</div>
+{% endblock %}
