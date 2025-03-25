@@ -1,0 +1,149 @@
+html {
+    background: rgb(162, 139, 106);
+    background: linear-gradient(90deg, rgba(162, 139, 106, 1) 29%, rgba(197, 176, 147, 1) 45%, rgba(197, 183, 119, 1) 61%, rgba(199, 190, 150, 1) 81%);
+    margin-top: 100px;
+}
+
+body {
+    margin: 0;
+    font-family: Garamond, sans-serif;
+    background: rgb(162, 139, 106);
+    background: linear-gradient(90deg, rgba(162, 139, 106, 1) 29%, rgba(197, 176, 147, 1) 45%, rgba(197, 183, 119, 1) 61%, rgba(199, 190, 150, 1) 81%);
+    color: #333;
+    text-align: center;
+
+}
+
+h1 {
+    position: relative;
+    top: -51px;
+    text-align: center;
+    color: #021010;
+    font-weight: bold;
+    margin: 20px 0;
+    text-decoration: underline;
+}
+
+
+.our-page-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: rgb(178, 132, 67);
+    color: rgb(69, 25, 2);
+    font-size: 20px;
+    font-weight: bold;
+    border: 2px solid rgb(69, 25, 2);
+    /* Added border style */
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    animation-delay: -1s;
+    /* Added missing semicolon */
+    cursor: pointer;
+    /* Added missing semicolon */
+    box-shadow: 0 15px 15px rgba(112, 42, 2, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.our-page-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(71, 40, 3, 0.5);
+}
+
+.container {
+    background: rgb(162, 139, 106);
+    background: linear-gradient(90deg, rgba(162, 139, 106, 1) 29%, rgba(197, 176, 147, 1) 45%, rgba(197, 183, 119, 1) 61%, rgba(199, 190, 150, 1) 81%);
+}
+
+.our-team {
+    padding: 20px 15px 30px;
+    background: rgb(162, 139, 106);
+    background: linear-gradient(90deg, rgba(162, 139, 106, 1) 29%, rgba(197, 176, 147, 1) 45%, rgba(197, 183, 119, 1) 61%, rgba(199, 190, 150, 1) 81%);
+    border-radius: 15px;
+    text-align: center;
+}
+
+.our-team .pic {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 25px;
+    transition: all 0.5s ease 0s;
+}
+
+.our-team:hover .pic {
+    background: #6f3803;
+    border-radius: 0%;
+}
+
+.pic img {
+    width: 100%;
+}
+
+.our-team .title {
+    display: block;
+    font-family: 'Garamond', sans-serif;
+    /* Change this line */
+    font-size: 20px;
+    font-weight: 600;
+    color: #2e282a;
+    text-transform: uppercase;
+    margin: 0 0 7px 0;
+    letter-spacing: 2px;
+    /* Optional: add letter spacing for a more stylish look */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    /* Optional: add a subtle shadow for more style */
+}
+
+
+
+.our-team .post {
+    display: block;
+    font-size: 15px;
+    color: #5b3309;
+    text-transform: capitalize;
+    margin-bottom: 15px;
+}
+
+.our-team .social {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.our-team .social li {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.our-team .social li a {
+    display: block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    font-size: 15px;
+    color: #63480a;
+    border: 1px solid #010909;
+    transition: all 0.5s ease 0s;
+}
+
+.our-team:hover .social li a {
+    background: #784703;
+    color: #fff;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .our-team {
+        margin-bottom: 30px;
+    }
+
+    .pic img {
+        height: 438.75px;
+        width: 320px;
+    }
+}

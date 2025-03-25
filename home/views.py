@@ -144,11 +144,13 @@ def profile_view(request, username):
     profile, created = Profile.objects.get_or_create(user=profile_user)
     
     posts = Post.objects.filter(user=profile_user)
-
+     # ✅ Get the logged-in user's following list
+    following = request.user.profile.following.all()
     context = {
         "profile_user": profile_user,
         "profile": profile,
         "posts": posts,
+        "following": following
     }
     return render(request, "profile.html", context)
 
@@ -160,7 +162,9 @@ def follow_unfollow(request, username):
     user_to_follow = get_object_or_404(User, username=username)
     profile_to_follow = get_object_or_404(Profile, user=user_to_follow)
     current_user_profile = get_object_or_404(Profile, user=request.user)
-
+    is_following = request.user in profile_to_follow.followers.all()  # ✅ Check if user is following
+    
+    
     if profile_to_follow != current_user_profile:
         if request.user in profile_to_follow.followers.all():
             profile_to_follow.followers.remove(request.user)
@@ -208,4 +212,3 @@ def create_post(request):
         form = PostForm()
 
     return render(request, 'create_post.html', {'form': form})
-

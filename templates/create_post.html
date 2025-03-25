@@ -17,9 +17,9 @@
 
             <!-- Image Preview -->
             <div id="image-preview-container" class="hidden mt-4">
-                <p class="text-gray-400 text-sm">Image Preview:</p>
-                <div class="relative w-full border border-gray-600 rounded-md overflow-hidden">
-                    <img id="image-preview" class="w-full h-auto">
+                <p class="text-gray-400 text-sm mb-5">Image Preview:</p>
+                <div class="relative w-auto border border-gray-600 rounded-md overflow-hidden">
+                    <img id="image-preview" class="w-auto h-auto">
                 </div>
             </div>
 
@@ -68,15 +68,24 @@
                 img.src = e.target.result;
                 img.onload = function () {
                     const preview = document.getElementById("image-preview");
+                    const container = document.getElementById("image-preview-container");
+
+                    // Set image src and dimensions
                     preview.src = img.src;
                     preview.style.width = img.width + "px";
                     preview.style.height = img.height + "px";
 
-                    document.getElementById("image-preview-container").classList.remove("hidden");
+                    // Also update container to match image
+                    const containerDiv = container.querySelector("div"); // the inner div
+                    containerDiv.style.width = img.width + "px";
+                    containerDiv.style.height = img.height + "px";
+
+                    container.classList.remove("hidden");
                 };
             };
             reader.readAsDataURL(file);
         }
     });
+
 </script>
 {% endblock %}

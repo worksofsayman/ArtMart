@@ -29,5 +29,49 @@
             console.log("✅ jQuery Loaded!");
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".follow-form").forEach(form => {
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault(); 
+        
+                    let button = this.querySelector(".follow-btn");
+                    let url = this.action;
+                    let csrfToken = this.querySelector("[name=csrfmiddlewaretoken]").value;
+                    let followerCount = document.getElementById("followers-count");
+                    let followingCount = document.getElementById("following-count");
+        
+                    fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrfToken,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.following) {
+                            button.textContent = "Unfollow";
+                            button.style.backgroundColor = "red";
+                        } else {
+                            button.textContent = "Follow";
+                            button.style.backgroundColor = "";
+                        }
+        
+                        // Update follower & following counts
+                        if (followerCount) {
+                            followerCount.textContent = data.followers_count;
+                        }
+                        if (followingCount) {
+                            followingCount.textContent = data.following_count;
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+                });
+            });
+        });
+        </script>
 </body>
 </html>

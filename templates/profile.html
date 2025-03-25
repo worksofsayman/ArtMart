@@ -2,45 +2,83 @@
 {% load static %}
 
 {% block content %}
-<div class="profile-container">
-    <!-- Profile Header -->
-    <div class="profile-header">
-        <img class="profile-pic" src="{{ profile.profile_picture.url }}" alt="Profile Picture">
-        <div class="profile-info">
-            <h2>@{{ profile_user.username }}</h2>
-            <p>{{ profile_user.bio }}</p>
-
-            <p>Followers: <span id="followers-count">{{ profile.followers.count|default:0 }}</span></p>
-            <p>Following: <span id="following-count">{{ profile.following.count|default:0 }}</span></p>
-            
-         {% if user.is_authenticated and user != profile_user %}
-           <form action="{% url 'follow_unfollow' profile_user.username %}" method="POST" class="follow-form">
-             {% csrf_token %}
-             {% if user in profile.followers.all %}
-            <button type="submit" class="follow-btn" style="background-color: red; color: white;">Unfollow</button>
-             {% else %}
-            <button type="submit" class="follow-btn">Follow</button>
-             {% endif %}
-             </form>
-         {% endif %}
-
-            
-            {% if user == profile_user.user %}
-                <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
-            {% endif %}
-        </div>
+<link rel="stylesheet" href="{% static 'dashboard.css' %}">
+<div class="flex flex-col items-center min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#6a6e70] text-white">
+    <!-- Sidebar -->
+    <div class="fixed left-4 top-[45%] transform -translate-y-1/2 w-20 h-[85vh] bg-[#141414] bg-opacity-60 backdrop-blur-md rounded-2xl p-4 transition-all duration-500 shadow-lg hover:w-64 hover:bg-opacity-85">
+        <div class="hidden hover:block font-bold text-lg text-white text-center">ArtSpot</div>
+        <ul class="space-y-4 mt-4">
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-home"></i> <span class="hidden hover:block">Home</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-chain"></i> <span class="hidden hover:block">Community</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-bolt"></i> <span class="hidden hover:block">Trending</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-video"></i> <span class="hidden hover:block">ShowCase</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-comment"></i> <span class="hidden hover:block">Message</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-bell"></i> <span class="hidden hover:block">Notification</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-plus"></i> <span class="hidden hover:block">Create</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-user"></i> <span class="hidden hover:block">Profile</span>
+            </li>
+            <li class="flex items-center gap-4 p-3 text-lg rounded-xl cursor-pointer transition-transform hover:bg-white/10 hover:scale-105">
+                <i class="fa-solid fa-bars"></i> <span class="hidden hover:block">More</span>
+            </li>
+        </ul>
     </div>
 
-    <!-- User Posts -->
-    <div class="posts-grid">
-        {% for post in posts %}
-            <div class="post-item">
-                <img src="{{ post.image.url }}" alt="Post">
+    <!-- Main Content -->
+    <div class="ml-24 w-[90%] flex flex-col items-center p-6">
+        <!-- Profile Section -->
+        <div class="w-2/3 bg-[#1e1e1e] bg-opacity-85 rounded-2xl p-10 flex items-center shadow-lg">
+            <img src="https://i.pinimg.com/736x/0a/53/c3/0a53c3bbe2f56a1ddac34ea04a26be98.jpg" alt="Profile Picture" class="w-32 h-32 rounded-full border-4 border-white shadow-md transform hover:scale-110 transition-transform">
+            <div class="ml-6 text-white">
+                <h2 class="text-4xl font-bold">@{{ profile_user.username }}</h2>
+                <p class="text-gray-300 text-lg">{{ profile_user.bio }}</p>
+                <button class="mt-4 px-6 py-2 bg-gray-700 text-white font-bold rounded-full hover:bg-gray-600 transition-all">Edit Profile</button>
+                <p class="mt-2 text-lg">Followers: <span id="followers-count" class="font-semibold">{{ profile.followers.count|default:0 }}</span></p>
+                <p class="text-lg">Following: <span id="following-count" class="font-semibold">{{ profile.following.count|default:0 }}</span></p>
             </div>
-        {% empty %}
-            <p>No posts yet.</p>
-        {% endfor %}
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex justify-center gap-6 mt-8">
+            <button class="tab active px-6 py-2 border-2 border-white text-white rounded-full hover:bg-gray-700 transition">Posts</button>
+            <button class="tab px-6 py-2 border-2 border-white text-white rounded-full hover:bg-gray-700 transition">Reels</button>
+            <button class="tab px-6 py-2 border-2 border-white text-white rounded-full hover:bg-gray-700 transition">Saved</button>
+            <button class="tab px-6 py-2 border-2 border-white text-white rounded-full hover:bg-gray-700 transition">Liked</button>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="grid grid-cols-3 gap-6 mt-10 pb-20">
+            {% for post in posts %}
+                <div class="rounded-xl overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+                    <img src="{{ post.image.url }}" alt="Post" class="w-full h-64 object-cover">
+                </div>
+            {% empty %}
+                <p class="text-gray-300 col-span-3">No posts yet.</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
+<script>
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+        document.getElementById(tabName).classList.remove('hidden');
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('bg-gray-700'));
+        event.target.classList.add('bg-gray-700');
+    }
+</script>
 {% endblock %}

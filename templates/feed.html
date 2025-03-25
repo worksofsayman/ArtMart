@@ -11,9 +11,9 @@
             <div class="bg-gray-900 border border-gray-800 rounded-xl shadow-lg p-4 relative flex flex-col my-5">
 
                 <!-- Clickable Post Image -->
-                <a href="{% url 'post_detail_view' post.id %}" class="rounded-lg overflow-hidden">
+                <a href="{% url 'post_detail_view' post.id %}" class="rounded-lg overflow-hidden flex justify-center">
                     <img src="{{ post.image.url }}"
-                        class="w-full h-64 object-cover rounded-lg hover:scale-105 transition">
+                        class="max-w-[23rem] max-h-auto object-cover rounded-lg hover:scale-105 transition">
                 </a>
 
                 <div class="mt-4 flex flex-col flex-grow">
@@ -58,20 +58,35 @@
                     {% endif %}
 
                     <!-- Like, Dislike, Comment Buttons -->
-                    <div class="mt-4 flex gap-2">
-                        <button class="like-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
-                            data-post-id="{{ post.id }}">
-                            👍 Like (<span id="like-count-{{ post.id }}">{{ post.like_count }}</span>)
-                        </button>
-                        <button class="dislike-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
-                            data-post-id="{{ post.id }}">
-                            👎 Dislike (<span id="dislike-count-{{ post.id }}">{{ post.dislike_count}}</span>)
-                        </button>
-                        <button class="toggle-comments bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
-                            data-post-id="{{ post.id }}">
-                            💬 Comments (<span id="comment-count-{{ post.id }}">{{ post.comments.count }}</span>)
-                        </button>
+                    <div class="mt-4 flex flex-col items-center gap-2">
+                        <!-- Like & Dislike Count on Top -->
+                        <div class="flex justify-center gap-4">
+                            <div>
+                                👍 <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span>
+                            </div>
+                            <div>
+                                👎 <span id="dislike-count-{{ post.id }}">{{ post.total_dislikes }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Like & Dislike Buttons -->
+                        <div class="flex gap-2">
+                            <button class="like-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
+                                data-post-id="{{ post.id }}">
+                                👍 Like
+                            </button>
+                            <button class="dislike-btn bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
+                                data-post-id="{{ post.id }}">
+                                👎 Dislike
+                            </button>
+                            <button
+                                class="toggle-comments bg-gray-800 text-white px-3 py-1 rounded-lg hover:bg-gray-700"
+                                data-post-id="{{ post.id }}">
+                                💬 Comments (<span id="comment-count-{{ post.id }}">{{ post.comments.count }}</span>)
+                            </button>
+                        </div>
                     </div>
+
 
                     <!-- Hidden Comment Section -->
                     <div id="comment-section-{{ post.id }}" class="hidden mt-4 bg-gray-800 p-3 rounded-lg">
@@ -111,17 +126,21 @@
     <script>
         $(document).ready(function () {
             console.log("✅ jQuery Loaded!");
+            // ✅ CSRF Token Fetching
+            function getCSRFToken() {
+                return $("input[name=csrfmiddlewaretoken]").val();  // Get CSRF token from form
+            }
 
             // ✅ Like & Dislike Functionality
             $(document).on("click", ".like-btn, .dislike-btn", function () {
                 let button = $(this);
                 let postID = button.data("post-id");
                 let action = button.hasClass("like-btn") ? "like" : "dislike";
-                let csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+                let csrfToken = getCSRFToken();
 
                 $.ajax({
                     type: "POST",
-                    url: `/users/${action}/${postID}/`,
+                    url: `/reaction/${postID}/${action}/`,
                     headers: { "X-CSRFToken": csrfToken },
                     success: function (response) {
                         if (response.success) {
@@ -159,7 +178,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: `/users/add_comment/${postID}/`,
+                    url: `/add_comment/${postID}/`,
                     headers: { "X-CSRFToken": csrfToken },
                     contentType: "application/json",
                     data: JSON.stringify({ text: commentText }),
