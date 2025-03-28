@@ -61,13 +61,13 @@
         </div>
 
         <!-- Content Grid -->
-        <div class="grid grid-cols-3 gap-6 mt-10 pb-20">
+       <div class="grid grid-cols-3 gap-6 mt-10 pb-20">
             {% for post in posts %}
                 <div class="rounded-xl overflow-hidden shadow-lg transform transition-transform hover:scale-105">
                     <img src="{{ post.image.url }}" alt="Post" class="w-full h-64 object-cover">
                 </div>
             {% empty %}
-                <p class="text-gray-300 col-span-3">No posts yet.</p>
+                 <p class="text-gray-300 col-span-3">No posts yet.</p>
             {% endfor %}
         </div>
     </div>

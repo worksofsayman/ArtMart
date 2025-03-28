@@ -2,214 +2,207 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>ArtSpot - TCom</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+   <!-- <link rel="stylesheet" href="../media/static/output.css"> -->
+  <title>ArtSpot - TCom</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 
 <body class="bg-cover bg-center bg-no-repeat min-h-screen overflow-x-hidden text-white"
-    style="background-image: url('https://th.bing.com/th/id/OIP.sjz-SbIZ5pkOsF31gENaxQHaEo?w=299&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7');">
+  style="background-image: url('https://th.bing.com/th/id/OIP.sjz-SbIZ5pkOsF31gENaxQHaEo?w=299&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7');">
 
-    <!-- Hidden Navbar -->
-    <nav id="hidden-navbar"
-        class="fixed top-[-80px] left-0 w-full bg-black text-white text-center z-50 transition-all duration-300 flex justify-center py-3">
-        <ul class="flex gap-20 text-lg font-bold">
-            <li><a href="#home" class="transition">Spotlight</a></li>
-            <li><a href="#gallery" class="transition">About Us</a></li>
-            <li><a href="#contact" class="transition">Contact</a></li>
-            <li><a href="/login" class="transition">Login</a></li>
-        </ul>
-    </nav>
+  <!-- Sticky Navbar -->
+  <nav id="hidden-navbar"
+    class="fixed top-[-80px] left-0 w-full bg-black bg-opacity-80 text-white text-center z-50 transition-all duration-300">
+    <div class=" mx-auto flex justify-center items-center px-6 py-3">
+       <ul class="hidden sm:flex gap-6 text-sm md:text-lg font-semibold">
+        <li><a href="#home" class="hover:text-red-500 transition">Spotlight</a></li>
+        <li><a href="#gallery" class="hover:text-red-500 transition">About Us</a></li>
+        <li><a href="#contact" class="hover:text-red-500 transition">Contact</a></li>
+        <li><a href="/login" class="hover:text-red-500 transition">Login</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <!-- Home Section -->
-    <section id="home" class="flex justify-center items-center min-h-screen bg-cover bg-center"
-        style="background-image: url('https://img.freepik.com/premium-photo/photo-well-arranged-gallery-wall_778780-476.jpg');">
-        <div class="glassmorphism w-[95%] text-center p-10 rounded-xl">
-            <h1 class="text-5xl font-bold drop-shadow-xl">Art Spot</h1>
-            <p class="text-lg mt-4">Welcome to Art Club, a space where creativity thrives! Showcase your art, connect
-                with fellow creators, and share your passion with the world.</p>
-            <a href="#gallery"
-                class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition">Explore
-                Community</a>
-        </div>
-    </section>
+  <!-- Home Section -->
+  <section id="home" class="flex justify-center items-center min-h-screen bg-cover bg-center"
+    style="background-image: url('https://img.freepik.com/premium-photo/photo-well-arranged-gallery-wall_778780-476.jpg');">
+    <div class="glassmorphism w-full max-w-4xl text-center p-6 sm:p-10 rounded-xl">
+      <h1 class="text-3xl sm:text-5xl font-bold drop-shadow-xl">Art Spot</h1>
+      <p class="text-base sm:text-xl mt-4">Welcome to Art Club, a space where creativity thrives! Showcase your art,
+        connect with fellow creators, and share your passion with the world.</p>
+      <a href="#gallery"
+        class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition">Explore
+        Community</a>
+    </div>
+  </section>
 
-    <!-- Gallery Section -->
-    <section id="gallery" class="flex justify-center items-center min-h-screen bg-cover bg-center p-10"
-        style="background-image: url('https://th.bing.com/th/id/OIP.dIoHk96qlcbZGiviXmB_dwHaEL?w=302&h=180&c=7&pcl=1b1a19&r=0&o=5&dpr=1.5&pid=1.7');">
-        <div class="glassmorphism w-full md:w-3/4 text-center p-10 rounded-xl">
-            <h1 class="text-4xl font-bold">Features</h1>
-            <p class="text-lg mt-4">Explore a curated collection of art and craft from around the world.</p>
-            <div class="grid md:grid-cols-3 gap-7 mt-10">
+  <!-- Gallery Section -->
+  <section id="gallery" class="flex justify-center items-center min-h-screen bg-cover bg-center p-6 sm:p-10"
+    style="background-image: url('https://th.bing.com/th/id/OIP.dIoHk96qlcbZGiviXmB_dwHaEL?w=302&h=180&c=7&pcl=1b1a19&r=0&o=5&dpr=1.5&pid=1.7');">
+    <div class="glassmorphism w-full max-w-6xl text-center p-6 sm:p-10 rounded-xl">
+      <h1 class="text-2xl sm:text-4xl font-bold">Features</h1>
+      <p class="text-base sm:text-lg mt-4">Explore a curated collection of art and craft from around the world.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-10">
 
-                <!-- Card -->
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
-                            <h3 class="text-xl font-bold">Showcase</h3>
-                        </div>
-                        <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-                            <p class="text-lg px-3">Share your artwork with an <br>appreciative community.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
-                            <h3 class="text-xl font-bold">Trending</h3>
-                        </div>
-                        <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-                            <p class="text-lg px-3">Highlight popular and trending <br>artworks.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
-                            <h3 class="text-xl font-bold">Community</h3>
-                        </div>
-                        <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-                            <p class="text-lg px-3">Engage in discussions and <br>collaborations.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
-                            <h3 class="text-xl font-bold">Workshop</h3>
-                        </div>
-                        <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-                            <p class="text-lg px-3">Learn new techniques from expert <br>artists.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
-                            <h3 class="text-xl font-bold">Custom-Made</h3>
-                        </div>
-                        <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-                            <p class="text-lg px-3">Buy and sell unique artwork.</p>
-                        </div>
-                    </div>
-                </div>
-
+        <!-- Card Template -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+              <h3 class="text-xl font-bold">Showcase</h3>
             </div>
-        </div>
-    </section>
-    <!-- About Us Section -->
-    <section id="about" class="flex justify-center items-center min-h-screen bg-cover bg-center p-10"
-        style="background-image: url(../static/aboutus.webp);">
-        <div
-            class="flex flex-col md:flex-row items-center bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 rounded-2xl p-10 text-center shadow-lg w-full md:w-3/4">
-            <div class="w-full md:w-1/2 text-left">
-                <h1 class="text-4xl font-bold">About Us</h1>
-                <p class="text-lg mt-4">We are passionate about creating stunning, user-friendly websites and delivering
-                    unique experiences.</p>
-                <div class="flex gap-4 mt-6">
-                    <button class="bg-gray-700 text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition">Our
-                        Twitter</button>
-                    <button class="bg-gray-700 text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition">Our
-                        Insta</button>
-                    <button class="bg-gray-700 text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition">Our
-                        Newsletter</button>
-                </div>
+            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
+              <p class="text-base px-3">Share your artwork with an appreciative community.</p>
             </div>
+          </div>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="flex justify-center items-center min-h-screen bg-cover bg-center p-10" style="background-image: url(../static/contactus.webp);">
-        <div
-            class="bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 rounded-2xl p-10 text-center shadow-lg w-3/4 md:w-1/2">
-            <h1 class="text-4xl font-bold">Contact Us</h1>
-            <p class="text-lg mt-4">Have any questions? Reach out to us!</p>
-            <a href="mailto:info@artclub.com"
-                class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition">Email
-                Us</a>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+              <h3 class="text-xl font-bold">Trending</h3>
+            </div>
+            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
+              <p class="text-base px-3">Highlight popular and trending artworks.</p>
+            </div>
+          </div>
         </div>
-    </section>
 
-    <!-- JavaScript for Scroll Navigation & Navbar Behavior -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const navbar = document.getElementById("hidden-navbar");
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+              <h3 class="text-xl font-bold">Community</h3>
+            </div>
+            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
+              <p class="text-base px-3">Engage in discussions and collaborations.</p>
+            </div>
+          </div>
+        </div>
 
-            document.addEventListener("mousemove", function (event) {
-                if (event.clientY <= 60) {
-                    navbar.style.top = "0";
-                } else if (event.clientY > 100) {
-                    navbar.style.top = "-80px";
-                }
-            });
-        });
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+              <h3 class="text-xl font-bold">Workshop</h3>
+            </div>
+            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
+              <p class="text-base px-3">Learn new techniques from expert artists.</p>
+            </div>
+          </div>
+        </div>
 
-        document.querySelectorAll(".magnetic-btn").forEach(button => {
-            button.addEventListener("mousemove", function (e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                this.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            });
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+              <h3 class="text-xl font-bold">Custom-Made</h3>
+            </div>
+            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
+              <p class="text-base px-3">Buy and sell unique artwork.</p>
+            </div>
+          </div>
+        </div>
 
-            button.addEventListener("mouseleave", function () {
-                this.style.transform = "translate(0, 0)";
-            });
-        });
-    </script>
+      </div>
+    </div>
+  </section>
 
-    <!-- Custom Tailwind Styles -->
-    <style>
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  <!-- About Us Section -->
+  <section id="about" class="flex justify-center items-center min-h-screen bg-cover bg-center p-6 sm:p-10"
+    style="background-image: url(../media/static/aboutus.webp);">
+    <div
+      class="flex flex-col md:flex-row gap-8 items-center bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 rounded-2xl p-6 sm:p-10 text-center shadow-lg w-full max-w-5xl">
+      <div class="w-full md:w-1/2 text-left">
+        <h1 class="text-2xl sm:text-4xl font-bold">About Us</h1>
+        <p class="text-base sm:text-lg mt-4">We are passionate about creating stunning, user-friendly websites and
+          delivering unique experiences.</p>
+        <div class="flex flex-wrap gap-4 mt-6">
+          <button class="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">Our Twitter</button>
+          <button class="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">Our Insta</button>
+          <button
+            class="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">Newsletter</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="flex justify-center items-center min-h-screen bg-cover bg-center p-6 sm:p-10"
+    style="background-image: url(../media/static/contactus.webp);">
+    <div
+      class="bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 rounded-2xl p-6 sm:p-10 text-center shadow-lg w-full max-w-xl">
+      <h1 class="text-2xl sm:text-4xl font-bold">Contact Us</h1>
+      <p class="text-base sm:text-lg mt-4">Have any questions? Reach out to us!</p>
+      <a href="mailto:info@artclub.com"
+        class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition">Email
+        Us</a>
+    </div>
+  </section>
+
+  <!-- JavaScript for Navbar Behavior -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const navbar = document.getElementById("hidden-navbar");
+
+      document.addEventListener("mousemove", function (event) {
+        if (event.clientY <= 60) {
+          navbar.style.top = "0";
+        } else if (event.clientY > 100) {
+          navbar.style.top = "-80px";
         }
+      });
+    });
+  </script>
 
-        .flip-card {
-            background-color: transparent;
-            width: 320px;
-            height: 200px;
-            /* perspective: 1200px; */
-            /* margin: 10px; */
-            position: relative;
-            transition: transform 0.7s ease-in-out;
-        }
+  <!-- Custom Tailwind Styles -->
+  <style>
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
 
-        .flip-card-inner {
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.7s ease-in-out;
-            transform-style: preserve-3d;
-            border-radius: 10px;
-        }
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      max-width: 320px;
+      height: 200px;
+      margin: auto;
+      position: relative;
+      transition: transform 0.7s ease-in-out;
+    }
 
-        .flip-card:hover .flip-card-inner {
-            transform: rotate3d(1, 1, 0, 180deg);
-        }
+    .flip-card-inner {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease-in-out;
+      transform-style: preserve-3d;
+      border-radius: 10px;
+    }
 
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: grid;
-            place-items: center;
-            border-radius: 10px;
-        }
+    .flip-card:hover .flip-card-inner {
+      transform: rotate3d(1, 1, 0, 180deg);
+    }
 
-        .flip-card-back {
-            transform: rotate3d(1, 1, 0, 180deg);
-        }
-    </style>
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+    }
+
+    .flip-card-back {
+      transform: rotate3d(1, 1, 0, 180deg);
+    }
+  </style>
+
 </body>
 
 </html>
