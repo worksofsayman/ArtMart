@@ -10,16 +10,16 @@ import json
 
 
 def index(request):
-    return render(request, 'index.html')  # This loads your HTML file
+    return render(request, 'index.html')  
 
-# User Registration View
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Auto login after registration
-            return redirect('feed')  # Redirect to homepage after signup
+            login(request, user)  
+            return redirect('feed')  
     else:
         form = UserRegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -32,12 +32,12 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("feed")  # Redirect after successful login
+            return redirect("feed")  
 
     return render(request, "login.html", {"form": form})
 
 def landing(request):
-    return render(request, "landing.html")  # Use a template inside the users app
+    return render(request, "landing.html") 
 
 
 @login_required
@@ -81,8 +81,23 @@ def feed(request):
 
 @login_required
 def post_detail_view(request, post_id):
-    post = get_object_or_404(Post, id=post_id)  # Fetch the post by ID
-    return render(request, 'post_detail.html', {'post': post})
+    post = get_object_or_404(Post, id=post_id)
+    profile_user = post.user
+    posts = Post.objects.filter(user=profile_user).exclude(id=post.id)[:3]
+
+
+  
+    source = request.GET.get('from', '')
+    show_pay_button = (source == 'feed')  # Show pay button only if coming from feed
+
+    context = {
+        'post': post,
+        'profile_user': profile_user,
+        'posts': posts,
+        'show_pay_button': show_pay_button,
+    }
+    return render(request, 'post_detail.html', context)
+
 
 
 def custom_csrf_failure_view(request, reason=""):

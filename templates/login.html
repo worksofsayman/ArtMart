@@ -8,18 +8,18 @@
     <title>The Art Club - Login</title>
 </head>
 
-<body class="flex justify-center items-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+<body class="flex justify-center items-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-4">
 
     <!-- Glassmorphic Login Card -->
     <div class="bg-white bg-opacity-10 backdrop-blur-lg border border-gray-700 shadow-xl rounded-xl px-10 py-8 text-center w-full max-w-md">
 
         <!-- Logo (Optional) -->
         <div class="mb-5">
-            <h1 class="text-4xl font-extrabold text-white drop-shadow-md">🎨 The Art Club</h1>
+            <h1 class="sm:text-4xl text-[1.6rem] font-extrabold text-white drop-shadow-md">🎨 The ArtMart</h1>
         </div>
 
         <!-- Login Heading -->
-        <h2 class="text-3xl font-semibold text-white drop-shadow-lg mb-6">Login</h2>
+        <h2 class="sm:text-3xl text-2xl font-semibold text-white drop-shadow-lg mb-6">Login</h2>
 
         <!-- Login Form -->
         <form method="POST" class="space-y-5">
@@ -58,7 +58,7 @@
 
             <!-- Styled Submit Button -->
             <button type="submit" 
-                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl transition-transform transform hover:scale-105 shadow-lg">
+                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold sm:py-3 py-2 px-4 rounded-xl transition-transform transform hover:scale-105 shadow-lg">
                 Login
             </button>
         </form>
@@ -85,6 +85,11 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             outline: none;
             transition: all 0.2s ease-in-out;
+        }
+        @media(max-width: 640px) {
+            input {
+                padding: 8px 12px;
+            }
         }
     </style>
 

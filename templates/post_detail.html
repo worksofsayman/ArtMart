@@ -21,7 +21,12 @@
                     {% endif %}
                 </div>
                 <div class="flex justify-center items-center">
-                    <a href="#"><button class="bg-white text-black font-bold px-4 text-[1.1rem] py-1 rounded-xl">Pay</button></a>
+                    {% if show_pay_button %}
+                    <a href="#">
+                        <button class="bg-white text-black font-bold px-4 text-[1.1rem] py-1 rounded-xl">Pay</button>
+                    </a>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
