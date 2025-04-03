@@ -48,8 +48,14 @@
     <div class="ml-24 w-[90%] flex flex-col items-center p-6">
         <!-- Profile Section -->
         <div class="w-2/3 bg-[#1e1e1e] bg-opacity-85 rounded-2xl p-10 flex items-center shadow-lg">
-            <img src="https://i.pinimg.com/736x/0a/53/c3/0a53c3bbe2f56a1ddac34ea04a26be98.jpg" alt="Profile Picture"
-                class="w-32 h-32 rounded-full border-4 border-white shadow-md transform hover:scale-110 transition-transform">
+            {% if profile.profile_pic %}
+            <img src="{{ profile.profile_pic.url }}" alt="Profile Picture"
+                 class="w-32 h-32 rounded-full border-4 border-white shadow-md transform hover:scale-110 transition-transform">
+            {% else %}
+            <img src="/media/default.jpg" alt="Default Profile Picture"
+                 class="w-32 h-32 rounded-full border-4 border-white shadow-md transform hover:scale-110 transition-transform">
+            {% endif %}
+        
             <div class="ml-6 text-white">
                 <h2 class="text-4xl font-bold">@{{ profile_user.username }}</h2>
                 <p class="text-gray-300 text-lg">{{ profile_user.bio }}</p>

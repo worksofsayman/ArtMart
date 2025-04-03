@@ -9,7 +9,7 @@ from django.db import models
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to User model
-    profile_picture = models.ImageField(upload_to='profile_pics/', default='static/default.jpg')
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='./default.jpg')
     bio = models.TextField(blank=True, null=True)
     followers = models.ManyToManyField(User, related_name="followers", blank=True)
     following = models.ManyToManyField(User, related_name="following", blank=True)  # Add this field!
