@@ -10,16 +10,16 @@ import json
 
 
 def index(request):
-    return render(request, 'index.html')  
+    return render(request, 'index.html')  # This loads your HTML file
 
-
+# User Registration View
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  
-            return redirect('feed')  
+            login(request, user)  # Auto login after registration
+            return redirect('feed')  # Redirect to homepage after signup
     else:
         form = UserRegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -32,12 +32,12 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("feed")  
+            return redirect("feed")  # Redirect after successful login
 
     return render(request, "login.html", {"form": form})
 
 def landing(request):
-    return render(request, "landing.html") 
+    return render(request, "landing.html")  # Use a template inside the users app
 
 
 @login_required
@@ -81,23 +81,8 @@ def feed(request):
 
 @login_required
 def post_detail_view(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    profile_user = post.user
-    posts = Post.objects.filter(user=profile_user).exclude(id=post.id)[:3]
-
-
-  
-    source = request.GET.get('from', '')
-    show_pay_button = (source == 'feed')  # Show pay button only if coming from feed
-
-    context = {
-        'post': post,
-        'profile_user': profile_user,
-        'posts': posts,
-        'show_pay_button': show_pay_button,
-    }
-    return render(request, 'post_detail.html', context)
-
+    post = get_object_or_404(Post, id=post_id)  # Fetch the post by ID
+    return render(request, 'post_detail.html', {'post': post})
 
 
 def custom_csrf_failure_view(request, reason=""):
@@ -172,6 +157,30 @@ def profile_view(request, username):
 
 
 
+
+from django.shortcuts import render
+from django.utils.timezone import now, timedelta
+from django.core.cache import cache
+from django.db.models import Count
+from .models import Post
+
+def trending_posts_view(request):
+    # Check if cached trending posts exist
+    trending_posts = cache.get('trending_posts')
+
+    if not trending_posts:
+        # Fetch posts sorted by like count dynamically
+        trending_posts = Post.objects.annotate(like_count=Count('likes_dislikes')).order_by('-like_count')[:10]
+
+        # Cache the trending posts for 24 hours
+        cache.set('trending_posts', list(trending_posts), timeout=86400)  # 24 hours
+
+    return render(request, 'trending.html', {'trending_posts': trending_posts})
+
+
+
+
+
 @login_required
 def follow_unfollow(request, username):
     user_to_follow = get_object_or_404(User, username=username)
@@ -227,3 +236,67 @@ def create_post(request):
         form = PostForm()
 
     return render(request, 'create_post.html', {'form': form})
+
+
+API_KEY = ""
+
+import requests
+import os
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.core.files.storage import default_storage
+from django.conf import settings
+
+
+# Render the AI Page
+def ai_page(request):
+    return render(request, "ai.html")
+
+# Generate AI Art from User Prompt
+def generate_image(request):
+    if request.method == "GET":
+        prompt = request.GET.get("prompt", "").strip()
+
+        if not prompt:
+            return JsonResponse({"error": "Prompt is required!"}, status=400)
+
+        # 🖌️ Improve Prompt for AI & Artists
+        improved_prompt = f"A high-quality, artistic, step-by-step creation of {prompt}, beginner-friendly, simple strokes, easy to recreate, digital painting, concept art."
+
+        url = "https://api.openai.com/v1/images/generations"
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json",
+        }
+        data = {
+            "model": "dall-e-3",  # 🎨 Using DALL-E 3 for better results
+            "prompt": improved_prompt,
+            "n": 1,
+            "size": "1024x1024"
+        }
+
+        response = requests.post(url, json=data, headers=headers)
+
+        if response.status_code == 200:
+            ai_response = response.json()
+            image_url = ai_response["data"][0]["url"]
+
+            # 🖌️ Generate Step-by-Step Guide for Artists
+            guide = generate_art_steps(prompt)
+
+            return JsonResponse({
+                "image_url": image_url,
+                "art_guide": guide
+            })
+        else:
+            return JsonResponse({"error": f"Failed to generate image. API Response: {response.text}"}, status=400)
+
+# ✅ Function to Create an Artist-Friendly Guide
+def generate_art_steps(subject):
+    return [
+        f"1️⃣ Sketch: Start with a light pencil sketch of {subject}. Focus on proportions.",
+        f"2️⃣ Outline: Use a fine pen or brush to define the shape clearly.",
+        f"3️⃣ Base Colors: Apply the main colors lightly with a brush or digital tool.",
+        f"4️⃣ Shading & Highlights: Add shadows and light to give depth.",
+        f"5️⃣ Final Touches: Enhance details and refine edges for a polished look."
+    ]

@@ -1,0 +1,249 @@
+/* Importing Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* Universal Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.4s ease-in-out;
+}
+
+/* Body with animated background */
+body {
+    background: linear-gradient(135deg, #0a0a0a, #6a6e70);
+    color: white;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 80px;
+    height: 85vh;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 15px;
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+}
+
+.sidebar:hover {
+    width: 250px;
+    background: rgba(20, 20, 20, 0.85);
+}
+
+.brand-text {
+    display: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.sidebar:hover .brand-text {
+    display: inline-block;
+}
+
+/* Sidebar Menu */
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.07);
+}
+
+.menu-text {
+    display: none;
+}
+
+.sidebar:hover .menu-text {
+    display: inline-block;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 120px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Profile Section */
+.profile-section {
+    width: 60%;
+    background: rgba(30, 30, 30, 0.85);
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+}
+
+/* Profile Header */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.profile-pic {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+.profile-info {
+    color: white;
+}
+
+.name {
+    font-size: 3em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+}
+
+.username {
+    font-size: 1.5em;
+    color: #b8c6d1;
+    opacity: 0.8;
+}
+
+.bio {
+    font-size: 1.3em;
+    color: #cfd8dc;
+}
+
+/* Edit Profile Button */
+.edit-profile {
+    margin-top: 15px;
+    padding: 15px 35px;
+    background: linear-gradient(45deg, #636363, #000000);
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.edit-profile:hover {
+    background: linear-gradient(45deg, #000000, #737373);
+    transform: scale(1.1);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.tab {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 15px 25px;
+    font-size: 1.4em;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background: linear-gradient(45deg, #4b4b4b, #a4a4a4);
+    color: black;
+    font-weight: bold;
+    border: 2px solid #ff6a00;
+}
+
+.tab:hover {
+    background: #6b6b6b;
+    transform: scale(1.15);
+}
+
+/* Content Section */
+
+.content-section {
+    width: 70%;
+    margin-top: 30px;
+}
+
+/* Content Grid */
+.content-grid {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.content-grid.active {
+    display: grid;
+}
+
+.grid-item {
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grid-item img,
+.grid-item video {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.grid-item:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+}
+
+.grid-item video {
+    height: 370px;
+    display:grid;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #232526;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff6a00, #ee0979);
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ee0979;
+}

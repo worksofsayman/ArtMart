@@ -20,4 +20,10 @@ urlpatterns = [
     path('post/<int:post_id>/', views.post_detail_view, name='post_detail_view'),
     path('reaction/<int:post_id>/<str:action>/', views.like_dislike_post, name='like_dislike_post'),
     path("create_post/", views.create_post, name="create_post"),
+    path("ai/", views.ai_page, name="ai_page"), 
+    path("ai/generate/", views.generate_image, name="generate_image"),
+     path('trending/', views.trending_posts_view, name='trending_posts'),
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
+    
+
     ]

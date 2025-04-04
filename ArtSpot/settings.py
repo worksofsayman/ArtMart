@@ -72,11 +72,11 @@ WSGI_APPLICATION = 'ArtSpot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQL_DATABASE', 'artspotdb'),
-        'USER': os.getenv('MYSQL_USER', 'kaustubh'),
-        'PASSWORD': os.getenv('MYSQL_PASSWORD', 'Tilkhanha27'),
-        'HOST': os.getenv('MYSQL_HOST', 'Kaustubh2007'),  # Change if using an external database
-        'PORT': os.getenv('MYSQL_PORT', '2007'),  # Default MySQL port is 3306
+        'NAME': os.getenv('MYSQL_DATABASE', 'ArtMart'),
+        'USER': os.getenv('MYSQL_USER', 'Sayman'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', 'Sayman@2007'),
+        'HOST': os.getenv('MYSQL_HOST', 'localhost'),  # Change if using an external database
+        'PORT': os.getenv('MYSQL_PORT', '3306'),  # Default MySQL port is 3306
     }
 }
 

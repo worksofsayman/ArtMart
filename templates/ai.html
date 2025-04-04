@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Image Generator & Artist Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white flex flex-col items-center py-10 px-4">
+
+  <h1 class="text-4xl font-extrabold mb-6 text-center">🎨 AI Image Generator & Artist Guide</h1>
+
+  <!-- Container -->
+  <div class="w-full max-w-xl bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-lg border border-white/10">
+
+    <!-- Generate AI Art Section -->
+    <h2 class="text-2xl font-semibold mb-4 text-blue-300">Generate Art</h2>
+    <input type="text" id="generatePrompt" placeholder="Enter a prompt"
+           class="w-full p-3 bg-gray-700 text-white rounded-lg mb-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <button onclick="generateArt()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+      Generate
+    </button>
+
+    <!-- Status Message -->
+    <p id="generateStatus" class="mt-4 text-sm text-gray-300"></p>
+
+    <!-- Generated Image -->
+    <img id="generatedImage" class="mt-6 rounded-lg shadow-md hidden mx-auto max-w-full max-h-96" />
+
+    <!-- Step-by-Step Artist Guide -->
+    <h2 class="text-2xl font-semibold mt-10 mb-4 text-blue-300">Step-by-Step Guide for Artists</h2>
+    <ul id="artGuide" class="list-decimal list-inside text-gray-300 space-y-2"></ul>
+  </div>
+
+  <!-- Script -->
+  <script>
+    async function generateArt() {
+      let prompt = document.getElementById("generatePrompt").value.trim();
+      let status = document.getElementById("generateStatus");
+      let image = document.getElementById("generatedImage");
+      let guideList = document.getElementById("artGuide");
+
+      if (!prompt) {
+        alert("Please enter a prompt!");
+        return;
+      }
+
+      status.textContent = "🎨 Generating, please wait...";
+      image.style.display = "none";
+      guideList.innerHTML = "";
+
+      try {
+        let response = await fetch(`/ai/generate/?prompt=${encodeURIComponent(prompt)}`);
+        let data = await response.json();
+
+        if (data.image_url) {
+          image.src = data.image_url;
+          image.style.display = "block";
+          status.textContent = "";
+
+          data.art_guide.forEach(step => {
+            let li = document.createElement("li");
+            li.textContent = step;
+            guideList.appendChild(li);
+          });
+        } else {
+          status.textContent = "❌ Failed to generate image.";
+        }
+      } catch (error) {
+        status.textContent = "❌ Error generating image.";
+      }
+    }
+  </script>
+
+</body>
+</html>
