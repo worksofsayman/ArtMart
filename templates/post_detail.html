@@ -4,65 +4,75 @@
 <div class="bg-black min-h-screen text-white py-10">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 px-4">
 
-        <!-- Left Side: Post Details (with glass effect) -->
+        <!-- Left Side: Post Details -->
         <div class="w-full lg:w-2/3 bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-xl shadow-xl">
             <div class="flex justify-center">
-                <img src="{{ post.image.url }}" alt="{{ post.title }}"
-                    class="w-auto rounded-xl object-cover max-h-[25rem]">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-auto rounded-xl object-cover max-h-[25rem]">
+                {% else %}
+                    <img src="/static/default-image.jpg" alt="Default Image" class="w-auto rounded-xl object-cover max-h-[25rem]">
+                {% endif %}
             </div>
             <div class="flex justify-between">
                 <div class="mt-6 space-y-4">
                     <h1 class="text-4xl font-extrabold">{{ post.title }}</h1>
                     <p class="text-gray-300 text-lg"><strong>Description: </strong>{{ post.description }}</p>
+                    <p class="text-gray-300 text-lg"><strong>Price: </strong>₹{{ post.price }}</p>
                     {% if post.availability %}
-                    <span class="inline-block bg-green-500 text-white px-4 py-1 rounded-full text-sm">Available</span>
+                        <span class="inline-block bg-green-500 text-white px-4 py-1 rounded-full text-sm">Available</span>
                     {% else %}
-                    <span class="inline-block bg-red-500 text-white px-4 py-1 rounded-full text-sm">Sold</span>
+                        <span class="inline-block bg-red-500 text-white px-4 py-1 rounded-full text-sm">Sold</span>
                     {% endif %}
                 </div>
                 <div class="flex justify-center items-center">
                     {% if show_pay_button %}
-                    <a href="#">
-                        <button class="bg-white text-black font-bold px-4 text-[1.1rem] py-1 rounded-xl">Pay</button>
-                    </a>
+                        <button id="pay-btn" class="bg-white text-black font-bold px-4 text-[1.1rem] py-1 rounded-xl">Pay ₹{{ post.price }}</button>
                     {% endif %}
-
                 </div>
             </div>
         </div>
-
-        <!-- Right Side: User Profile (with glass effect) -->
-        <div class="w-full lg:w-1/3 bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-xl shadow-xl">
-            <!-- Profile Section -->
-            <div class="rounded-2xl p-6 flex flex-col items-center text-center shadow-lg border border-white/10">
-                <img src="https://i.pinimg.com/736x/0a/53/c3/0a53c3bbe2f56a1ddac34ea04a26be98.jpg" alt="Profile Picture"
-                    class="w-28 h-28 rounded-full border-4 border-white shadow-md hover:scale-105 transition-transform duration-300">
-                <h2 class="text-2xl font-bold mt-4">@{{ profile_user.username }}</h2>
-                <p class="text-gray-300 mt-1">{{ profile_user.bio }}</p>
-                <a href="{% url 'edit_profile' %}"
-                    class="mt-4 px-5 py-2 bg-gray-700 text-white font-semibold rounded-full hover:bg-gray-600 transition">
-                    Edit Profile
-                </a>
-                <div class="mt-4 space-y-1">
-                    <p class="text-lg">Followers: <span id="followers-count" class="font-semibold">{{
-                            profile.followers.count|default:0 }}</span></p>
-                    <p class="text-lg">Following: <span id="following-count" class="font-semibold">{{
-                            profile.following.count|default:0 }}</span></p>
-                </div>
-            </div>
-
-            <!-- Content Grid -->
-            <div class="mt-8 grid grid-cols-3 gap-4">
-                {% for user_post in posts %}
-                <div class="rounded-lg overflow-hidden shadow-md hover:scale-105 transform transition-transform">
-                    <img src="{{ user_post.image.url }}" alt="{{ user_post.title }}" class="w-full h-32 object-cover">
-                </div>
-                {% empty %}
-                <p class="text-gray-400 col-span-3 text-center">No posts yet.</p>
-                {% endfor %}
-            </div>
-        </div>
-
     </div>
 </div>
+
+<!-- Razorpay Payment Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let payButton = document.getElementById("pay-btn");
+        if (payButton) {
+            payButton.addEventListener("click", function () {
+                fetch(`/create-payment/{{ post.id }}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert("Payment Error: " + data.error);
+                            return;
+                        }
+                        var options = {
+                            "key": data.key,
+                            "amount": data.amount,
+                            "currency": data.currency,
+                            "order_id": data.order_id,
+                            "name": "ArtSpot",
+                            "description": "Payment for " + data.post_title,
+                            "handler": function (response) {
+                                alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                                window.location.href = "/payment-success/";
+                            },
+                            "prefill": {
+                                "email": "{{ request.user.email|default:'user@example.com' }}",
+                                "contact": "{{ request.user.profile.phone|default:'9999999999' }}"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                        var rzp = new Razorpay(options);
+                        rzp.open();
+                    })
+                    .catch(error => console.error("Payment Request Failed:", error));
+            });
+        }
+    });
+</script>
 {% endblock %}

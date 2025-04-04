@@ -9,7 +9,7 @@ from django.db import models
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to User model
-    profile_picture = models.ImageField(upload_to='profile_pics/', default='./default.jpg')
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='static/default.jpg')
     bio = models.TextField(blank=True, null=True)
     followers = models.ManyToManyField(User, related_name="followers", blank=True)
     following = models.ManyToManyField(User, related_name="following", blank=True)  # Add this field!
@@ -103,3 +103,29 @@ class LikeDislike(models.Model):
 
     class Meta:
         unique_together = ('user', 'post')  # Prevents multiple reactions from the same user
+        
+class Order(models.Model):
+    # Your fields here
+    x=5
+    
+    
+class HomeChatroom(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+
+class Chatroom(models.Model):
+    name = models.CharField(max_length=5000)
+    
+    def _str_(self):
+        return self.name
+
+class Chat(models.Model):
+    chat_content = models.CharField(max_length=5000)
+    user = models.CharField(max_length=5000)
+    room = models.ForeignKey(Chatroom, on_delete=models.CASCADE)
+    timestamp = models.DateField(auto_now_add=True)
+
+    
+
+

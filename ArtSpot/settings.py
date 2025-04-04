@@ -8,6 +8,10 @@ load_dotenv()
 # Ensure BASE_DIR is properly defined
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+RAZORPAY_KEY_ID = "rzp_test_zr1dwQlGjh0OwY"
+RAZORPAY_KEY_SECRET = "pMVy1h79sknA8VOYeFpkjwSL"
+
+
 # Security
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-zn@^g9!l0mat885@uc14(#+5ld@5ixlvju1s((yp1sb#d_fh0z')  # Use an env variable
 DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Set as an env variable in production
@@ -24,6 +28,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Installed Apps
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,7 +72,7 @@ TEMPLATES = [
 ]
 
 # WSGI Application
-WSGI_APPLICATION = 'ArtSpot.wsgi.application'
+ASGI_APPLICATION = 'ArtSpot.asgi.application'
 
 # Database Configuration (MySQL)
 DATABASES = {
@@ -99,3 +105,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CSRF Failure View
 CSRF_FAILURE_VIEW = 'home.views.custom_csrf_failure_view'
+from celery.schedules import crontab
+
+
+
+CHANNEL_LAYERS={
+    'default':{
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'delete_idle_lobbies': {
+        'task': 'chat.tasks.delete_idle_lobbies',
+        'schedule': crontab(minute=0, hour='*/1'),  # Runs every hour
+    },
+}

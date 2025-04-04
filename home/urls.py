@@ -4,6 +4,7 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
+from .views import create_payment
 
 urlpatterns = [
     path('', views.index, name = 'home'),
@@ -22,8 +23,13 @@ urlpatterns = [
     path("create_post/", views.create_post, name="create_post"),
     path("ai/", views.ai_page, name="ai_page"), 
     path("ai/generate/", views.generate_image, name="generate_image"),
-     path('trending/', views.trending_posts_view, name='trending_posts'),
+    path('trending/', views.trending_posts_view, name='trending_posts'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
-    
+    path("create-payment/<int:post_id>/", create_payment, name="create_payment"),
+    path("payment-success/", views.payment_success, name="payment_success"),
+    path("search/", views.search_users,name="search"),
+    path('chatlobby/', views.chatlobby, name='chatlobby'),
+    path('lobby/create_lobby/', views.create_lobby, name='create_lobby'),
+    path('lobby/', views.lobby, name='lobby'),
 
-    ]
+]

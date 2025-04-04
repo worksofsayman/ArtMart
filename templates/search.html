@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+    <form class="mb-4 flex items-center">
+        <input type="text" id="search-input" name="q" placeholder="Search users..." 
+               class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white focus:outline-none">
+    </form>
+
+    <ul id="search-results" class="space-y-4"></ul>
+
+    <p id="no-results" class="text-gray-400 hidden">No users found.</p>
+</div>
+
+<script>
+    document.getElementById("search-input").addEventListener("keyup", function() {
+        let query = this.value.trim();
+        let resultsContainer = document.getElementById("search-results");
+        let noResultsText = document.getElementById("no-results");
+    
+        if (query.length > 0) {
+            fetch(`/search/?q=${query}`, { headers: { "X-Requested-With": "XMLHttpRequest" } })  // Mark as AJAX request
+            .then(response => response.json())
+            .then(data => {
+                resultsContainer.innerHTML = "";  // Clear previous results
+    
+                if (data.users.length > 0) {
+                    noResultsText.classList.add("hidden");  // Hide "No users found"
+                    data.users.forEach(user => {
+                        let userItem = `
+                            <li class="flex items-center p-3 rounded-lg hover:bg-gray-800 cursor-pointer">
+                                <img src="https://ui-avatars.com/api/?name=${user.username}" alt="Avatar" class="w-10 h-10 rounded-full">
+                                <div class="ml-4">
+                                    <p class="text-lg font-semibold">${user.username}</p>
+                                    <p class="text-sm text-gray-400">${user.first_name} ${user.last_name}</p>
+                                </div>
+                            </li>`;
+                        resultsContainer.innerHTML += userItem;
+                    });
+                } else {
+                    noResultsText.classList.remove("hidden");  // Show "No users found"
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching search results:", error);
+            });
+        } else {
+            resultsContainer.innerHTML = "";
+            noResultsText.classList.add("hidden");
+        }
+    });
+    </script>
+    
+{% endblock %}

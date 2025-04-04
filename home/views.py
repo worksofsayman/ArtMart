@@ -7,7 +7,16 @@ from django.contrib.auth.models import User
 from .models import Post, Comment, LikeDislike, Profile
 from .forms import UserRegisterForm, PostForm, CommentForm, ProfileUpdateForm
 import json
-
+import razorpay
+from django.conf import settings
+from django.shortcuts import render
+from django.http import JsonResponse
+from .models import Order  # Your Order model
+from django.shortcuts import render
+from django.utils.timezone import now, timedelta
+from django.core.cache import cache
+from django.db.models import Count
+from .models import Post
 
 def index(request):
     return render(request, 'index.html')  # This loads your HTML file
@@ -78,11 +87,24 @@ def feed(request):
         form = PostForm()
 
     return render(request, 'feed.html', {'form': form, 'posts': posts})
-
 @login_required
 def post_detail_view(request, post_id):
-    post = get_object_or_404(Post, id=post_id)  # Fetch the post by ID
-    return render(request, 'post_detail.html', {'post': post})
+    post = get_object_or_404(Post, id=post_id)
+    profile_user = post.user
+    posts = Post.objects.filter(user=profile_user).exclude(id=post.id)[:3]
+
+
+  
+    source = request.GET.get('from', '')
+    show_pay_button = (source == 'feed')  # Show pay button only if coming from feed
+
+    context = {
+        'post': post,
+        'profile_user': profile_user,
+        'posts': posts,
+        'show_pay_button': show_pay_button,
+    }
+    return render(request, 'post_detail.html', context)
 
 
 def custom_csrf_failure_view(request, reason=""):
@@ -154,15 +176,6 @@ def profile_view(request, username):
     }
     return render(request, "profile.html", context)
 
-
-
-
-
-from django.shortcuts import render
-from django.utils.timezone import now, timedelta
-from django.core.cache import cache
-from django.db.models import Count
-from .models import Post
 
 def trending_posts_view(request):
     # Check if cached trending posts exist
@@ -237,8 +250,26 @@ def create_post(request):
 
     return render(request, 'create_post.html', {'form': form})
 
+def search_users(request):
+    query = request.GET.get('q', '').strip()  # Get search query
+    users = []
 
-API_KEY = ""
+    if query:
+        users = User.objects.filter(
+            Q(username__icontains=query) | 
+            Q(first_name__icontains=query) | 
+            Q(last_name__icontains=query)
+        ).distinct()
+
+    # **Check if it's an AJAX request**
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        user_data = [
+            {"username": user.username, "first_name": user.first_name, "last_name": user.last_name} 
+            for user in users
+        ]
+        return JsonResponse({"users": user_data})  # Return JSON
+
+    return render(request, 'search.html', {'users': users, 'query': query})
 
 import requests
 import os
@@ -300,3 +331,89 @@ def generate_art_steps(subject):
         f"4️⃣ Shading & Highlights: Add shadows and light to give depth.",
         f"5️⃣ Final Touches: Enhance details and refine edges for a polished look."
     ]
+    
+import razorpay
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Post  # Assuming Post is your model
+import os
+
+def debug_env_vars(request):
+    return JsonResponse({
+        "RAZORPAY_KEY_ID": os.getenv("RAZORPAY_KEY_ID"),
+        "RAZORPAY_KEY_SECRET": os.getenv("RAZORPAY_KEY_SECRET"),
+        "Django Setting Key": settings.RAZORPAY_KEY_ID,
+    })
+
+def create_payment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    
+    # Convert price to paisa (Razorpay uses smallest currency unit)
+    amount = int(post.price * 100)
+
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    
+    # Create a new Razorpay order
+    payment = client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": 1  # Auto capture the payment
+    })
+
+    return JsonResponse({
+        "key": settings.RAZORPAY_KEY_ID,
+        "amount": amount,
+        "currency": "INR",
+        "order_id": payment["id"],
+        "post_title": post.title
+    })
+
+def payment_success(request):
+    return render(request, "payment_success.html")
+
+
+import random, string
+import json
+
+
+def chatlobby(request):
+    return render(request, 'chatlobby.html')
+
+
+def lobby(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        lobby_code = request.POST.get('lobbycode')
+
+        #checking if lobby code exists
+        f=open("static/lobbies.json")
+        lobbies=json.load(f)
+        f.close()
+
+        if lobby_code not in lobbies:
+            return render(request, 'chatlobby.html', {'message':'Lobby does not exist. Please check your lobby code.'})
+
+    return render(request, 'lobby.html', {'user_name': name, 'lobbycode':lobby_code, 'room_name':lobbies[lobby_code]})
+
+
+def create_lobby(request):
+    if request.method == 'POST':
+        lobby_name = request.POST.get('lobby_name')
+        
+        f=open("static/lobbies.json")
+        lobbies=json.load(f)
+        f.close()
+
+        while True:
+            lobby_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+            if lobby_code not in lobbies:
+                break
+        
+        lobbies.update({lobby_code:lobby_name})
+        with open("static/lobbies.json","w") as file:
+            json.dump(lobbies, file)
+        
+        return render(request, 'create_lobby.html',{'lobby_code': lobby_code})
+    
+    return render(request, 'create_lobby.html')

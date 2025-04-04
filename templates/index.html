@@ -5,76 +5,199 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- <link rel="stylesheet" href="../media/static/output.css"> -->
-  <title>ArtMart - TCom</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <title>ArtMart - Dreamy UI</title>
   <style>
-    @keyframes slideUp {
-      from {
+    body {
+      margin: 0;
+      background: linear-gradient(120deg, #1e1e2f, #2a2f4f);
+      background-size: 200% 200%;
+      animation: gradientFlow 20s ease infinite;
+      overflow-x: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    @keyframes gradientFlow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .bubble-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(3px);
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.4;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: translateY(-120vh) scale(1.2);
         opacity: 0;
-        transform: translateY(60px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
       }
     }
 
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-60px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .glass {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+  </style>
+  <style>
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
-    .animate-slide-up {
-      animation: slideUp 0.8s ease-out forwards;
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      max-width: 300px;
+      height: 200px;
+      margin: auto;
+      position: relative;
+      transition: transform 0.7s ease-in-out;
     }
 
-    .animate-slide-down {
-      animation: slideDown 0.8s ease-out forwards;
+    .flip-card-inner {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease-in-out;
+      transform-style: preserve-3d;
+      border-radius: 10px;
     }
 
-    .opacity-0 {
-      opacity: 0;
+    .flip-card:hover .flip-card-inner {
+      transform: rotate3d(1, 1, 0, 180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+    }
+
+    .flip-card-back {
+      transform: rotate3d(1, 1, 0, 180deg);
     }
   </style>
 
   <style>
-    @keyframes typing {
-      from {
-        width: 0
+    @keyframes threadFall {
+      0% {
+        opacity: 0;
+        transform: translateY(-150px) scale(0.6);
       }
 
-      to {
-        width: 100%
+      60% {
+        opacity: 1;
+        transform: translateY(10px) scale(1.05);
+      }
+
+      100% {
+        transform: translateY(0) scale(1);
       }
     }
 
-    .typing-paragraph {
-      overflow: hidden;
+    .animate-thread-fall {
+      animation: threadFall 0.8s ease-out forwards;
+    }
+
+    .funky-thread {
+      z-index: 10;
       white-space: nowrap;
-      width: 0;
-      animation: typing 2s steps(60, end) forwards;
+      transform-origin: top center;
+      position: absolute;
     }
   </style>
+  <style>
+    .paint-splat {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at center, #ff4d4d, #ff4d4d 40%, transparent 70%);
+    }
+  </style>
+  <style>
+    .ink-stain {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.2;
+      width: 120px;
+      height: 120px;
+      background-image: url('/assets/stain.png');
+      /* update this path */
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .stain-red {
+      filter: hue-rotate(0deg) saturate(300%);
+    }
+
+    .stain-blue {
+      filter: hue-rotate(190deg) saturate(300%);
+    }
+
+    .stain-green {
+      filter: hue-rotate(90deg) saturate(300%);
+    }
+
+    .stain-yellow {
+      filter: hue-rotate(45deg) saturate(300%);
+    }
+  </style>
+
+
+
 
 </head>
 
-<body class="scroll-smooth bg-cover bg-center bg-no-repeat min-h-screen overflow-x-hidden text-white"
-  style="background-image: url('https://th.bing.com/th/id/OIP.sjz-SbIZ5pkOsF31gENaxQHaEo?w=299&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7');">
-
+<body class="text-white relative">
+  <div class="bubble-container" id="bubbles"></div>
 
   <!-- Responsive Sticky Navbar -->
   <nav id="hidden-navbar"
-    class="fixed top-[-80px] left-0 w-full bg-black bg-opacity-90 text-white z-50 shadow-lg transition-all duration-300 cursor-pointer">
+    class="fixed top-[-80px] left-0 w-full bg-black bg-opacity-95 text-white z-50 shadow-lg transition-all duration-300 cursor-pointer">
     <div class="mx-auto px-6 py-3 flex sm:justify-center justify-between items-center">
       <a href="#home" class="text-xl font-bold sm:hidden">ArtMart</a>
       <button id="menu-toggle" class="sm:hidden focus:outline-none">
@@ -102,135 +225,242 @@
     </div>
   </nav>
 
+  <!-- Threads Animation on Reload -->
+  <section class="absolute top-0 left-0 w-full h-[40vh] pointer-events-none z-40" id="thread-wrapper">
+    <svg id="thread-svg" class="absolute w-full h-full z-0" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="thread-container" class="absolute top-0 left-0 w-full h-full"></div>
+  </section>
 
-  <!-- Home Section -->
-  <section id="home" class="flex justify-center items-center min-h-screen bg-cover bg-center px-5 scroll-mt-5"
-    style="background-image: url('https://img.freepik.com/premium-photo/photo-well-arranged-gallery-wall_778780-476.jpg');">
-    <div class="glassmorphism w-full max-w-4xl text-center p-6 sm:p-10 rounded-xl">
-      <h1 class="text-3xl sm:text-5xl font-bold drop-shadow-xl text-white">
-        Art Mart
-      </h1>
-      <p id="typingParagraph" class="text-base sm:text-xl mt-4 text-white"></p>
+  <!-- Hero Section -->
+  <section id="home" class="min-h-screen flex items-center justify-center px-4 sm:px-6 pt-20 text-center">
+    <div class="glass max-w-3xl w-full p-6 sm:p-10 rounded-xl flex flex-col items-center">
+
+      <!-- Title -->
+      <div class="flex flex-col sm:flex-row justify-center items-center">
+        <h1 class="text-3xl sm:text-5xl font-extrabold mb-2 sm:mb-4">Welcome to</h1>
+        <p class="text-red-400 text-3xl sm:text-5xl font-extrabold sm:ml-3 mb-4">ArtMart</p>
+      </div>
+
+      <!-- Typing Paragraph -->
+      <p id="typingParagraph"
+        class="text-base sm:text-lg md:text-xl max-w-xl mx-auto border-r border-white inline-block overflow-hidden whitespace-nowrap mb-6">
+      </p>
+
+      <!-- Call to Action -->
       <a href="#gallery"
-        class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition-all transform hover:scale-105 duration-300">
-        Explore Community
+        class="mt-4 inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full transition-transform duration-300 hover:scale-105">
+        Explore
       </a>
     </div>
   </section>
 
-  <!-- Gallery Section -->
-  <section id="gallery"
-    class="flex justify-center items-center min-h-screen bg-cover bg-center p-6 sm:p-10 scroll-mt-12"
-    style="background-image: url('https://th.bing.com/th/id/OIP.dIoHk96qlcbZGiviXmB_dwHaEL?w=302&h=180&c=7&pcl=1b1a19&r=0&o=5&dpr=1.5&pid=1.7');">
-    <div class="glassmorphism w-full max-w-6xl text-center p-6 sm:p-10 rounded-xl">
-      <h1 class="text-2xl sm:text-4xl font-bold">Features</h1>
-      <p class="text-base sm:text-lg mt-4">Explore a curated collection of art and craft from around the world.</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-10">
 
-        <!-- 3 Cards from Top -->
-        <div class="flip-card opacity-0" data-animate="slide-down">
+  <!-- About Section -->
+  <section id="about" class="min-h-screen px-4 sm:px-6 py-24">
+    <div class="glass max-w-5xl mx-auto p-6 sm:p-10 rounded-xl flex flex-col md:flex-row gap-8 items-center">
+      <img src="/static/krishna.png" class="rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:w-1/2" />
+      <div class="text-center md:text-left md:w-1/2">
+        <h2 class="text-3xl font-bold mb-4">About Us</h2>
+        <p class="text-white text-base md:text-lg">We’re a creative hub empowering artists to showcase, share, and
+          monetize their talents while connecting with a like-minded global community.</p>
+        <div class="mt-6 flex gap-4 justify-center md:justify-start">
+          <a href="#"
+            class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-full font-medium transition-transform hover:scale-105">Twitter</a>
+          <a href="#"
+            class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-full font-medium transition-transform hover:scale-105">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="min-h-screen px-6 py-16">
+    <div class="glass max-w-6xl mx-auto text-center p-7 rounded-xl">
+      <h2 class="text-3xl font-bold mb-8">Gallery Features</h2>
+      <p class="text-base md:text-lg mb-12">Explore a curated collection of art and craft from around the world.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <!-- Feature Cards -->
+        <div class="flip-card">
           <div class="flip-card-inner">
-            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+            <div
+              class="flip-card-front bg-gradient-to-br from-gray-400 to-gray-500 text-center flex items-center justify-center">
               <h3 class="text-xl font-bold">Showcase</h3>
             </div>
-            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-              <p class="text-lg px-3">Share your artwork with an appreciative community.</p>
+            <div
+              class="flip-card-back bg-gradient-to-br from-gray-600 to-gray-700 text-center flex items-center justify-center p-4">
+              <p>Share your artwork with an appreciative community.</p>
             </div>
           </div>
         </div>
 
-        <div class="flip-card opacity-0" data-animate="slide-down">
+        <div class="flip-card">
           <div class="flip-card-inner">
-            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+            <div
+              class="flip-card-front bg-gradient-to-br from-gray-400 to-gray-500 text-center flex items-center justify-center">
               <h3 class="text-xl font-bold">Trending</h3>
             </div>
-            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-              <p class="text-lg px-3">Highlight popular and trending artworks.</p>
+            <div
+              class="flip-card-back bg-gradient-to-br from-gray-600 to-gray-700 text-center flex items-center justify-center p-4">
+              <p>Highlight popular and trending artworks.</p>
             </div>
           </div>
         </div>
 
-        <div class="flip-card opacity-0" data-animate="slide-down">
+        <div class="flip-card">
           <div class="flip-card-inner">
-            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+            <div
+              class="flip-card-front bg-gradient-to-br from-gray-400 to-gray-500 text-center flex items-center justify-center">
               <h3 class="text-xl font-bold">Community</h3>
             </div>
-            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-              <p class="text-lg px-3">Engage in discussions and collaborations.</p>
+            <div
+              class="flip-card-back bg-gradient-to-br from-gray-600 to-gray-700 text-center flex items-center justify-center p-4">
+              <p>Engage in discussions and collaborations.</p>
             </div>
           </div>
         </div>
 
-        <!-- 3 Cards from Bottom -->
-        <div class="flip-card opacity-0" data-animate="slide-up">
+        <div class="flip-card">
           <div class="flip-card-inner">
-            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+            <div
+              class="flip-card-front bg-gradient-to-br from-gray-400 to-gray-500 text-center flex items-center justify-center">
               <h3 class="text-xl font-bold">Workshop</h3>
             </div>
-            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-              <p class="text-lg px-3">Learn new techniques from expert artists.</p>
+            <div
+              class="flip-card-back bg-gradient-to-br from-gray-600 to-gray-700 text-center flex items-center justify-center p-4">
+              <p>Learn new techniques from expert artists.</p>
             </div>
           </div>
         </div>
 
-        <div class="flip-card opacity-0" data-animate="slide-up">
+        <div class="flip-card">
           <div class="flip-card-inner">
-            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+            <div
+              class="flip-card-front bg-gradient-to-br from-gray-400 to-gray-500 text-center flex items-center justify-center">
               <h3 class="text-xl font-bold">Custom-Made</h3>
             </div>
-            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-              <p class="text-lg px-3">Buy and sell unique artwork.</p>
+            <div
+              class="flip-card-back bg-gradient-to-br from-gray-600 to-gray-700 text-center flex items-center justify-center p-4">
+              <p>Buy and sell unique artwork.</p>
             </div>
           </div>
         </div>
 
-        <div class="flip-card opacity-0" data-animate="slide-up">
+        <div class="flip-card">
           <div class="flip-card-inner">
-            <div class="flip-card-front bg-gradient-to-br from-[#a7a7a7] to-[#858585]">
+            <div
+              class="flip-card-front bg-gradient-to-br from-gray-400 to-gray-500 text-center flex items-center justify-center">
               <h3 class="text-xl font-bold">AI Generator</h3>
             </div>
-            <div class="flip-card-back bg-gradient-to-br from-[#676669] to-[#7c7b7c]">
-              <p class="text-lg px-3">Generate arts using your personalized prompts.</p>
+            <div
+              class="flip-card-back bg-gradient-to-br from-gray-600 to-gray-700 text-center flex items-center justify-center p-4">
+              <p>Generate arts using your personalized prompts.</p>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- About Us Section -->
-  <section id="about" class="flex justify-center items-center min-h-screen bg-cover bg-center p-6 sm:p-10 scroll-mt-12"
-    style="background-image: url(../media/static/aboutus.webp);">
-    <div
-      class="flex flex-col md:flex-row gap-8 items-center bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 rounded-2xl p-6 sm:p-10 text-center shadow-lg w-full max-w-5xl">
-      <div class="w-full md:w-1/2 text-left">
-        <h1 class="text-2xl sm:text-4xl font-bold">About Us</h1>
-        <p class="text-base sm:text-lg mt-4">We are passionate about creating stunning, user-friendly websites and
-          delivering unique experiences.</p>
-        <div class="flex flex-wrap gap-4 mt-6">
-          <button class="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">Our Twitter</button>
-          <button class="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">Our Insta</button>
-          <button class="bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">Newsletter</button>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Contact Section -->
-  <section id="contact"
-    class="flex justify-center items-center min-h-screen bg-cover bg-center p-6 sm:p-10 scroll-mt-12"
-    style="background-image: url(../media/static/contactus.webp);">
-    <div
-      class="bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 rounded-2xl p-6 sm:p-10 text-center shadow-lg w-full max-w-xl">
-      <h1 class="text-2xl sm:text-4xl font-bold">Contact Us</h1>
-      <p class="text-base sm:text-lg mt-4">Have any questions? Reach out to us!</p>
-      <a href="mailto:info@artclub.com"
-        class="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition">Email
+  <section id="contact" class="min-h-screen px-6 py-24 flex justify-center items-center">
+    <div class="glass max-w-xl w-full text-center p-10 rounded-xl">
+      <h2 class="text-3xl font-bold mb-4">Contact Us</h2>
+      <p class="text-white mb-6">Reach out for support, collaborations, or feedback. We’d love to hear from you!</p>
+      <a href="mailto:info@artmart.com"
+        class="bg-yellow-400 hover:bg-yellow-500 text-black py-2 px-6 rounded-full font-semibold transition-transform hover:scale-105">Email
         Us</a>
     </div>
   </section>
+  <script>
+    function createThreads() {
+      const threadContainer = document.getElementById("thread-container");
+      const threadSvg = document.getElementById("thread-svg");
+      threadContainer.innerHTML = "";
+      threadSvg.innerHTML = "";
 
+      let artNames = ["Graffiti", "Pixel Art", "Collage", "Ink", "Digital", "Sculpture", "Sketch", "Spray Paint", "Mandala", "Pop Art"];
+
+      const screenWidth = window.innerWidth;
+
+      // Responsive trim
+      if (screenWidth < 400) {
+        artNames = artNames.slice(0, 4); // show fewer on very small screens
+      } else if (screenWidth < 640) {
+        artNames = artNames.slice(0, 6);
+      }
+
+      const step = 100 / (artNames.length + 1);
+
+      artNames.forEach((name, index) => {
+        const xPercent = step * (index + 1);
+        const yVH = Math.floor(Math.random() * 15) + 15;
+
+        const box = document.createElement("div");
+        box.className = "funky-thread bg-yellow-400 text-black font-semibold rounded-lg shadow-lg animate-thread-fall text-xs sm:text-sm md:text-base";
+
+        const width = screenWidth < 400 ? 70 : screenWidth < 640 ? 90 : 110;
+        box.style.width = `${width}px`;
+        box.style.padding = "6px";
+        box.style.textAlign = "center";
+        box.style.left = `calc(${xPercent}% - ${width / 2}px)`;
+        box.style.top = `${yVH}vh`;
+        box.textContent = name;
+
+        const xPixel = (xPercent / 100) * screenWidth;
+        const string = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        string.setAttribute("x1", `${xPixel}`);
+        string.setAttribute("y1", `0`);
+        string.setAttribute("x2", `${xPixel}`);
+        string.setAttribute("y2", `${(yVH / 100) * window.innerHeight}`);
+        string.setAttribute("stroke", "#ccc");
+        string.setAttribute("stroke-width", "2");
+
+        threadSvg.appendChild(string);
+        threadContainer.appendChild(box);
+      });
+    }
+
+
+    // Run once on load
+    window.addEventListener("DOMContentLoaded", createThreads);
+
+    // Rerun on resize (with debouncing)
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(createThreads, 300);
+    });
+  </script>
+
+  <script>
+    const text = "Create. Connect. Celebrate creativity with ArtMart.";
+    const el = document.getElementById("typingParagraph");
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 40);
+      }
+    }
+    window.addEventListener("DOMContentLoaded", type);
+  </script>
+
+  <script>
+    const container = document.getElementById("bubbles");
+    for (let i = 0; i < 40; i++) {
+      const b = document.createElement("div");
+      b.className = "bubble";
+      const size = Math.random() * 30 + 10;
+      b.style.width = `${size}px`;
+      b.style.height = `${size}px`;
+      b.style.left = `${Math.random() * 100}%`;
+      b.style.animationDuration = `${10 + Math.random() * 20}s`;
+      b.style.animationDelay = `${Math.random() * 10}s`;
+      container.appendChild(b);
+    }
+  </script>
   <!-- JavaScript for Navbar Behavior -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -274,103 +504,37 @@
       window.addEventListener("resize", handleNavbarVisibility);
     });
   </script>
-
-
   <script>
-    const text = "Welcome to Art Club, a space where creativity thrives! Showcase your art, connect with fellow creators, and share your passion with the world.";
-    const paragraph = document.getElementById("typingParagraph");
-    let index = 0;
+    document.addEventListener("DOMContentLoaded", () => {
+      const splatContainer = document.createElement("div");
+      splatContainer.style.position = "fixed";
+      splatContainer.style.inset = "0";
+      splatContainer.style.zIndex = "2";
+      splatContainer.style.pointerEvents = "none";
+      document.body.appendChild(splatContainer);
 
-    function typeText() {
-      if (index < text.length) {
-        paragraph.innerHTML += text.charAt(index);
-        index++;
-        setTimeout(typeText, 30); // typing speed
+      for (let i = 0; i < 20; i++) {
+        const splat = document.createElement("div");
+        splat.className = "paint-splat";
+
+        const size = Math.random() * 120 + 60; // size between 60px and 180px
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const rotate = Math.random() * 360;
+        const color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`;
+
+        splat.style.width = `${size}px`;
+        splat.style.height = `${size}px`;
+        splat.style.left = `${x}px`;
+        splat.style.top = `${y}px`;
+        splat.style.transform = `rotate(${rotate}deg)`;
+        splat.style.background = `radial-gradient(circle at center, ${color}, ${color} 40%, transparent 70%)`;
+
+        splatContainer.appendChild(splat);
       }
-    }
-
-    window.addEventListener("DOMContentLoaded", typeText);
-  </script>
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const el = entry.target;
-        const animationType = el.getAttribute('data-animate');
-
-        if (entry.isIntersecting) {
-          el.classList.remove('opacity-0');
-          el.classList.remove('animate-slide-up', 'animate-slide-down');
-
-          void el.offsetWidth; // Force reflow to restart animation
-
-          if (animationType === 'slide-down') {
-            el.classList.add('animate-slide-down');
-          } else {
-            el.classList.add('animate-slide-up');
-          }
-
-        } else {
-          el.classList.remove('animate-slide-up', 'animate-slide-down');
-          el.classList.add('opacity-0');
-        }
-      });
-    }, {
-      threshold: 0.3
-    });
-
-    document.querySelectorAll('.flip-card[data-animate]').forEach(card => {
-      observer.observe(card);
     });
   </script>
 
-
-  <!-- Custom Tailwind Styles -->
-  <style>
-    .glassmorphism {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    .flip-card {
-      background-color: transparent;
-      width: 100%;
-      max-width: 320px;
-      height: 200px;
-      margin: auto;
-      position: relative;
-      transition: transform 0.7s ease-in-out;
-    }
-
-    .flip-card-inner {
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      transition: transform 0.7s ease-in-out;
-      transform-style: preserve-3d;
-      border-radius: 10px;
-    }
-
-    .flip-card:hover .flip-card-inner {
-      transform: rotate3d(1, 1, 0, 180deg);
-    }
-
-    .flip-card-front,
-    .flip-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      display: grid;
-      place-items: center;
-      border-radius: 10px;
-    }
-
-    .flip-card-back {
-      transform: rotate3d(1, 1, 0, 180deg);
-    }
-  </style>
 
 </body>
 
