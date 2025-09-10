@@ -38,6 +38,7 @@ pycparser==2.22
 pyOpenSSL==24.1.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
+python-dotenv==1.0.0
 requests==2.32.3
 service-identity==24.1.0
 setuptools==69.5.1
