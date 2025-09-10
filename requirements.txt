@@ -49,4 +49,5 @@ vine==5.1.0
 wcwidth==0.2.13
 yarl==1.9.4
 zope.interface==6.3
-openai
+openai==0.27.8
+tzdata==2025.2
